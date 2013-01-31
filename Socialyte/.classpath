@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre7_64">
+		<attributes>
+			<attribute name="owner.project.facets" value="java"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/Apache Tomcat v7.0">
+		<attributes>
+			<attribute name="owner.project.facets" value="jst.web"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry exported="true" kind="lib" path="C:/Program Files (x86)/DataStax Community/apache-cassandra/lib/apache-cassandra-1.2.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Program Files (x86)/DataStax Community/apache-cassandra/lib/libthrift-0.7.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/Sam/Desktop/Libraries for Hector/apache-cassandra-thrift-1.2.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/Sam/Desktop/Libraries for Hector/guava-13.0.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/Sam/Desktop/hector-0.5.1-9.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Program Files (x86)/DataStax Community/apache-cassandra/lib/commons-lang-2.6.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Program Files (x86)/DataStax Community/apache-cassandra/lib/slf4j-api-1.7.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/Sam/Desktop/hector-object-mapper-3.1-07.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Program Files (x86)/DataStax Community/apache-cassandra/lib/apache-cassandra-clientutil-1.2.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Program Files (x86)/DataStax Community/apache-cassandra/lib/slf4j-log4j12-1.7.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Program Files (x86)/DataStax Community/apache-cassandra/lib/log4j-1.2.16.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/Sam/Desktop/Libraries for Hector/hector-core-0.7.0-22.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/Sam/Downloads/hector-core-1.0-1.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/Sam/Downloads/hector-core-1.1-2.jar"/>
+	<classpathentry kind="output" path="build/classes"/>
+</classpath>
