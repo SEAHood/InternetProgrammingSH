@@ -4,11 +4,30 @@ html, body {
 	height:100%;
 	font-family:""Trebuchet MS", Helvetica, sans-serif"; }
 
+.blue_button {
+  	color: #1c94fb;
+  	border: 1px solid #1c94fb;
+  	font-weight: bold;
+}
+
+.blue_button:hover { 
+  	color: #000000;
+  	border: 1px solid #000000;
+  	cursor: hand; cursor: pointer;
+}
+
+.blue_textbox {
+	/*color: #1c94fb;
+	border: 1px solid #808080;*/
+}
+
 #wrapper {
 	width:100%;
 	height:100%; }
 
 #top_bar {
+	top:0;
+	position:fixed;
 	width:100%;
 	height:40px;
 	background-image:url(../img/top_bar_bg.png);
@@ -17,6 +36,31 @@ html, body {
 #content {
 	width:100%;
 	background-image:url(../img/content_bg.png); }
+	
+#login_pane {
+	text-align:center;
+	width:30%;
+	height:30%;
+	margin:auto;
+	padding-top:10%;
+	padding-bottom:5%;
+}	
+	
+#login_img {
+	width:100%;
+}
+
+#username_textbox, #password_textbox {
+	width:55%;
+	text-align:center;
+  	font-weight: bold;
+}
+
+#submit_login {
+	margin-top:10px;
+}
+	
+	
 	
 #post_pane {
 	padding-top:30px; }
@@ -32,7 +76,6 @@ html, body {
 	border:1px dashed #808080;
 	padding:10px;
 	 }
-
 
 .post_left {
 	float:left; 
