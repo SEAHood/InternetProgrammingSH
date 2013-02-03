@@ -12,8 +12,6 @@ import me.prettyprint.hector.api.factory.HFactory;
 
 public class Login {
 	
-	Cluster cassCluster;
-	Keyspace cassKeyspace;
 	ColumnFamilyTemplate<String, String> template;
 	
 	String login_username;
@@ -26,18 +24,16 @@ public class Login {
 		login_password = _password;
 	}
 	
-	public String getUserPass()
-	{
-		ColumnFamilyResult<String, String> res = template.queryColumns(login_username);
-	    String value = res.getString("password");
-		return value;
-		
-	}
+
 	
 	public boolean setup()
 	{
 		try {
 			//INITIALISE CONNECTION
+			Cluster cassCluster;
+			Keyspace cassKeyspace;
+			
+			
 			cassCluster = HFactory.getOrCreateCluster("Test Cluster","77.99.214.115:9160");
 			
 			cassKeyspace = HFactory.createKeyspace("TESTSPACE", cassCluster);
@@ -58,8 +54,31 @@ public class Login {
 	
 	public boolean execute()
 	{
-		ColumnFamilyResult<String, String> res = template.queryColumns(login_username);
-	    String value = res.getString("password");
+		ColumnFamilyResult<String, String> res = null;
+		boolean connected = false;
+		boolean err_found = false;
+		
+		while (!connected)
+		{
+			err_found = false;
+			
+			try
+			{
+				res = template.queryColumns(login_username);
+			}
+			catch (HectorException e)
+			{
+				err_found = true;		
+			}
+			
+			if (!err_found)
+			{
+				connected = true;
+			}
+		}
+		
+		
+		String value = res.getString("password");
 	    
 	    if (value != null)
 	    {

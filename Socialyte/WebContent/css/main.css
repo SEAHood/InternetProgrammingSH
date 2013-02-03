@@ -26,6 +26,7 @@ html, body {
 	height:100%; }
 
 #top_bar {
+	z-index:1000;
 	top:0;
 	position:fixed;
 	width:100%;
@@ -35,8 +36,31 @@ html, body {
 
 #content {
 	width:100%;
-	background-image:url(../img/content_bg.png); }
+	top:40px;
+	background-image:url(../img/content_bg.png);
+	background-repeat:no-repeat;
+	background-attachment:fixed;
+	background-size:100% 100%; }
 	
+	
+/*+++++++++++++++++++++++++LOADING POPUP SHIZZLE ME NIZZLE+++++++++++++++++++++++++++++*/
+#loading_popup {
+	z-index:1000;
+	background-color:#F0F0F0; /*#99CCFF*/
+	position:absolute;
+	top:50px;
+	left:50%;
+	width:300px;
+	height:45px;
+	margin:0 0 0 -150px;
+	border:1px solid #808080;
+	border-radius:10px;
+	text-align:center;
+	padding:5px;
+	visibility:hidden;
+}	
+	
+/*+++++++++++++++++++++++++LOGIN SHIZZLE ME NIZZLE+++++++++++++++++++++++++++++*/
 #login_pane {
 	text-align:center;
 	width:30%;
@@ -59,14 +83,58 @@ html, body {
 #submit_login {
 	margin-top:10px;
 }
+
+
+/*+++++++++++++++++++++++++USER PANE+++++++++++++++++++++++++++++*/
+#user_pane {
+	position:fixed;
+	float:left;
+	margin-left:10px;
+	padding:5px;
+	top:50px;
+	background-color:#F0F0F0;
+	border-radius: 10px;
+	border:1px solid #C0C0C0;
+}
 	
-	
-	
+#user_avatar {
+	float:left;
+	width:70px;
+	height:70px;
+	padding:5px;
+}
+
+#user_avatar img {
+	border-radius: 10px;
+	border:1px solid #808080;
+}
+
+#user_info {
+	padding-left:5px;
+	padding-right:5px;
+	float:left;
+}
+
+#user_controls {
+	clear:both;
+	padding-left:10px;
+	padding-top:5px;
+	position:relative;
+}
+
+
+
+/*+++++++++++++++++++++++++POST PANE SHIZZLE ME NIZZLE+++++++++++++++++++++++++++++*/
 #post_pane {
-	padding-top:30px; }
+	float:center;
+	position:relative;
+	top:50px;
+	width:550px;
+	margin-left:auto;
+	margin-right:auto;}
 	
 .post {
-	clear:both;
+	z-index:100;
 	margin-bottom:40px;
 	overflow:auto;
 	width:500px;
@@ -90,7 +158,6 @@ html, body {
 .post_avatar { 
 	padding:3px;
 	padding-right:10px;
-	float:right;
 }
 
 .post_avatar img {
@@ -120,9 +187,14 @@ html, body {
 	float:right;
 }
 
-
+/*++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+	
+#signup_text {
+	font-size:small;
+}	
 	
 #footer {
+	clear:both;
 	text-align:center;
   	margin-left:auto;
 	margin-right:auto;	

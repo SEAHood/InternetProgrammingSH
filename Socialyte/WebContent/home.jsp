@@ -24,17 +24,23 @@
 			
 		<div id="content">
 		
-		<!-- LOGIN MARKUP
-			<div id="login_pane">
-			<img src="img/login.png" id="login_img" />
-				<form id="login" action="./login" method="POST" >
-					<input class="blue_textbox" id="username_textbox" type="text" name="username" size="35" placeholder="Username"><br/>
-					<input class="blue_textbox" id="password_textbox" type="password" name="password" size="35" placeholder="Password"><br/>
-					<input class="blue_button" id="submit_login" type="submit" value="Login" >
-					<button class="blue_button" type="submit" value="Register">Sign up</button>
-				</form>
-			</div> -->
-		
+				<div id="user_pane">
+					<div id="user_avatar">
+						<img src="img/avatar.png" />
+					</div>
+					<div id="user_info">
+						{username}<br/>
+						{post count}<br/>
+						{info}
+					</div>
+					<div id="user_controls">
+						<form name="logout_form" method="POST" action="./Login">
+						<input type="hidden" id="logout" name="logout">
+		        		<input class="blue_button" id="logout_button" type="submit" value="Logout" >
+	    			</form>
+					</div>
+					
+				</div>
 		
 				<div id="post_pane">
 					
@@ -66,10 +72,92 @@
 									
 				</div>
 				
-				<FORM NAME="form1" METHOD="POST" action="./Login">
-				<input type="hidden" id="logout" name="logout">
-        		<input class="blue_button" id="logout_button" type="submit" value="Logout" >
-    			</FORM>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				Test Stuff<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>Test Stuff<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>Test Stuff<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>Test Stuff<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>Test Stuff<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>Test Stuff<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
 		 
 		 
 		</div>
