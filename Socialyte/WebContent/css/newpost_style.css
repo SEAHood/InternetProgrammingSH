@@ -1,0 +1,36 @@
+@CHARSET "ISO-8859-1";
+
+#new_post_pane {
+	float:center;
+	position:relative;
+	top:50px;
+	width:550px;
+	margin-left:auto;
+	margin-right:auto;
+	height:50%;	
+}
+
+#new_post {
+	text-align:center;
+	z-index:100;
+	margin-bottom:40px;
+	overflow:auto;
+	width:500px;
+	margin-left:auto;
+	margin-right:auto;
+	background-color:#F0F0F0;
+	border-radius: 15px;
+	border:1px dashed #808080;
+	padding:10px;
+}
+
+#body_text {
+	width:300px;
+	height:100px;
+	margin-bottom:15px;
+}
+
+#tags_text {
+	width:300px;
+	margin-bottom:15px;
+}

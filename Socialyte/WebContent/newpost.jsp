@@ -6,7 +6,8 @@
 <title>Socialyte</title>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link rel="shortcut icon" href="/Socialyte/img/favicon.ico" />
-<link rel="stylesheet" type="text/css" href="/Socialyte/css/main.css">
+<link rel="stylesheet" type="text/css" href="/Socialyte/css/main_style.css">
+<link rel="stylesheet" type="text/css" href="/Socialyte/css/newpost_style.css">
 <script type="text/JavaScript" src="js/loading.js"></script> 
 
 <script type="text/JavaScript">

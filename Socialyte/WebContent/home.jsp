@@ -10,7 +10,9 @@
 <title>Socialyte</title>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link rel="shortcut icon" href="img/favicon.ico" />
-<link rel="stylesheet" type="text/css" href="css/main.css">
+<link rel="stylesheet" type="text/css" href="/Socialyte/css/main_style.css">
+<link rel="stylesheet" type="text/css" href="/Socialyte/css/home_style.css">
+
 </head>
 
 <body>

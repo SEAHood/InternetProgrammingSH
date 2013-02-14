@@ -1,0 +1,67 @@
+@CHARSET "ISO-8859-1";
+
+#post_pane {
+	float:center;
+	position:relative;
+	top:50px;
+	width:550px;
+	margin-left:auto;
+	margin-right:auto;
+}
+	
+.post {
+	z-index:100;
+	margin-bottom:40px;
+	overflow:auto;
+	width:500px;
+	margin-left:auto;
+	margin-right:auto;
+	background-color:#F0F0F0;
+	border-radius: 15px;
+	border:1px dashed #808080;
+	padding:10px;
+}
+
+.post_left {
+	float:left; 
+	overflow:auto;
+	width:auto;
+}
+
+.post_right {
+	float:left;
+	padding-left:5px;
+	width:80%; 
+}
+
+.post_avatar { 
+	padding:3px;
+	padding-right:10px;
+}
+
+.post_avatar img {
+	border-radius: 10px;
+	border:1px solid #808080;
+}
+
+.post_username {
+	font-size:large;
+	color:#1c94fb;
+}
+
+.post_body {
+	line-height:100%;
+	text-align:justify;
+}
+	
+.post_tags {
+	font-size:small;
+	color:#808080;
+	float:left;
+}
+
+.post_date {
+	font-size:small;
+	color:#808080;
+	float:right;
+}
