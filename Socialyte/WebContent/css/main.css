@@ -140,6 +140,7 @@ html, body {
 	width:500px;
 	margin-left:auto;
 	margin-right:auto;
+	background-color:#F0F0F0;
 	border-radius: 15px;
 	border:1px dashed #808080;
 	padding:10px;
@@ -188,6 +189,53 @@ html, body {
 }
 
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+
+#new_post_pane {
+	float:center;
+	position:relative;
+	top:50px;
+	width:550px;
+	margin-left:auto;
+	margin-right:auto;
+	height:50%;	
+}
+
+#new_post {
+	text-align:center;
+	z-index:100;
+	margin-bottom:40px;
+	overflow:auto;
+	width:500px;
+	margin-left:auto;
+	margin-right:auto;
+	background-color:#F0F0F0;
+	border-radius: 15px;
+	border:1px dashed #808080;
+	padding:10px;
+}
+
+#body_text {
+	width:300px;
+	height:100px;
+	margin-bottom:15px;
+}
+
+#tags_text {
+	width:300px;
+	margin-bottom:15px;
+}
+
+/*++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+
+.big_text {
+	font-size:large;
+	color:#1c94fb;
+}
+
+.small_text {
+	font-size:small;
+	color:#808080;
+}
 	
 #signup_text {
 	font-size:small;
@@ -196,6 +244,7 @@ html, body {
 #footer {
 	clear:both;
 	text-align:center;
+	padding-top:20px;
   	margin-left:auto;
 	margin-right:auto;	
 	width:100%;

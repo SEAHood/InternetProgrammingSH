@@ -58,6 +58,9 @@ public class Login {
 		boolean connected = false;
 		boolean err_found = false;
 		
+		int timeout = 2;
+		int timer = 0;
+		
 		while (!connected)
 		{
 			err_found = false;
@@ -68,6 +71,9 @@ public class Login {
 			}
 			catch (HectorException e)
 			{
+				timer++;
+				if (timer > timeout)
+					return false;
 				err_found = true;		
 			}
 			
@@ -91,26 +97,6 @@ public class Login {
 	    	return false;
 	}
 	
-	//CONNECTION SETUP
-			
-			
-			/*
-			// READ CODE
-		    ColumnFamilyResult<String, String> res = template.queryColumns("shood");
-		    String value = res.getString("full_name");
-		    //out.println("<p>The full name of user 'shood' is: " + value + "</p>"); //DISPLAY
-			    
-			
-			// UPDATE / CREATE CODE
-			// <String, String> correspond to key and Column name.
-			ColumnFamilyUpdater<String, String> updater = template.createUpdater("jbloggs");
-			updater.setString("full_name", "Joe Bloggs");
-			updater.setLong("time", System.currentTimeMillis());
-
-			try {
-			    template.update(updater);
-			} catch (HectorException e) {
-			    // do something ...
-			}*/
+	
 
 }

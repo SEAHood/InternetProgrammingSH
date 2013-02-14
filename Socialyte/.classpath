@@ -15,7 +15,6 @@
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry exported="true" kind="lib" path="C:/Program Files (x86)/DataStax Community/apache-cassandra/lib/apache-cassandra-1.2.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="C:/Program Files (x86)/DataStax Community/apache-cassandra/lib/libthrift-0.7.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="C:/Users/Sam/Desktop/Libraries for Hector/apache-cassandra-thrift-1.2.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="C:/Users/Sam/Desktop/Libraries for Hector/guava-13.0.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="C:/Users/Sam/Desktop/hector-0.5.1-9.jar"/>
 	<classpathentry exported="true" kind="lib" path="C:/Program Files (x86)/DataStax Community/apache-cassandra/lib/commons-lang-2.6.jar"/>

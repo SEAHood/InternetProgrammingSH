@@ -2,6 +2,8 @@ package sclyt.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Iterator;
+import java.util.UUID;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -10,6 +12,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import me.prettyprint.hector.api.beans.Row;
+
+import sclyt.model.Posts;
 
 /**
  * Servlet implementation class HomeController
@@ -31,26 +37,7 @@ public class HomeController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		HttpSession session = request.getSession();
-		String session_username = (String)session.getAttribute("username");
-		
-
-		PrintWriter out = response.getWriter();
-		//out.println("TEST");
-		
-		
-		if(session.getAttribute("username") != null)
-		{
-			RequestDispatcher rd = getServletContext().getRequestDispatcher("/home.jsp");
-			rd.forward(request, response);
-		}
-		else
-		{
-			
-			RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.jsp");
-			rd.forward(request, response);
-		}
-		
+		directToHome(request, response);
 	}
 
 	/**
@@ -58,25 +45,37 @@ public class HomeController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		HttpSession session = request.getSession();
+		directToHome(request, response);
+	}
+	
+	
+	private void directToHome(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
+	{
+		HttpSession session = req.getSession();
 		String session_username = (String)session.getAttribute("username");
 		
+		Posts posts = new Posts();
+		//posts.getPosts();
 
-		PrintWriter out = response.getWriter();
+		PrintWriter out = res.getWriter();
 		//out.println("TEST");
 		
 		
 		if(session.getAttribute("username") != null)
 		{
+			req.setAttribute("Posts", posts.getPosts());
+			
+			
+			
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/home.jsp");
-			rd.forward(request, response);
+			rd.forward(req, res);
 		
 		}
 		else
 		{
 			
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.jsp");
-			rd.forward(request, response);
+			rd.forward(req, res);
 		}
 	}
 
