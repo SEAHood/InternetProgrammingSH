@@ -11,7 +11,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link rel="shortcut icon" href="img/favicon.ico" />
 <link rel="stylesheet" type="text/css" href="/Socialyte/css/main_style.css">
-<link rel="stylesheet" type="text/css" href="/Socialyte/css/home_style.css">
+<link rel="stylesheet" type="text/css" href="/Socialyte/css/post_style.css">
 
 </head>
 
@@ -20,14 +20,23 @@
 
 		<div id="top_bar">
 			
-			<a href="./Socialyte"><img src="img/logo.png" id="logo" /></a>
+			<div id="logo_div">
+				<a href="./Socialyte"><img src="img/logo.png" id="logo" /></a>
+			</div>
 			
+			<div id="menu_items">
+				<img src="img/profile_US.png" id="profile" onmouseover="this.src='img/profile_S.png'" onmouseout="this.src='img/profile_US.png'"/>
+				<img src="img/newpost_US.png" id="new_post" onmouseover="this.src='img/newpost_S.png'" onmouseout="this.src='img/newpost_US.png'"/>
+				<img src="img/subscriptions_US.png" id="subscriptions" onmouseover="this.src='img/subscriptions_S.png'" onmouseout="this.src='img/subscriptions_US.png'"/>
+				
+			</div>
 			
-			<form id="search_box" action="" method="GET" >
-				<input class="blue_textbox" type="text" name="search" size="35" placeholder="Search for anything..">
-				<input class="blue_button" id="submit_search" type="submit" value="Go" >
-			</form>
-
+			<div id="search_div">
+				<form id="search_box" action="" method="GET" >
+					<input class="blue_textbox" type="text" name="search" size="35" placeholder="Search for anything..">
+					<input class="blue_button" id="submit_search" type="submit" value="Go" >
+				</form>
+			</div>
 		</div>
 			
 		<div id="content">

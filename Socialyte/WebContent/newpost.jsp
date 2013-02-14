@@ -20,7 +20,7 @@ function timedRefresh(timeoutPeriod) {
 
 </head>
 
-<body onload="JavaScript:timedRefresh(5000);">
+<body>
 	<div id="wrapper">
 
 		<div id="top_bar">
@@ -57,10 +57,10 @@ function timedRefresh(timeoutPeriod) {
 				<div id="new_post">
 					<div class="big_text">Say..</div>
 					<form name="new_post_form" method="POST" action="#">
-						<textarea id="body_text" name="body" rows="5" cols="30" placeholder="Message"></textarea><br/>
+						<textarea id="body_text" name="body" rows="5" cols="30"></textarea><br/>
 						<div class="big_text">Tag it!</div>
 						<div class="small_text">Seperate tags with commas (,)</div>
-						<input type="text" id="tags_text" name="tags" placeholder="Tags"><br/>
+						<input type="text" id="tags_text" name="tags"><br/>
 						<input class="blue_button" id="make_new_post" type="submit" value="Post">
 					</form>
 				
