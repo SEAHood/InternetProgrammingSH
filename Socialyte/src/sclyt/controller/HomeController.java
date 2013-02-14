@@ -54,7 +54,7 @@ public class HomeController extends HttpServlet {
 		HttpSession session = req.getSession();
 		String session_username = (String)session.getAttribute("username");
 		
-		Posts posts = new Posts();
+		
 		//posts.getPosts();
 
 		PrintWriter out = res.getWriter();
@@ -63,6 +63,7 @@ public class HomeController extends HttpServlet {
 		
 		if(session.getAttribute("username") != null)
 		{
+			Posts posts = new Posts();
 			req.setAttribute("Posts", posts.getPosts());
 			
 			

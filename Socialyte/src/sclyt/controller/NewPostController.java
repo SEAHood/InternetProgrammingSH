@@ -8,6 +8,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import sclyt.model.PostCreator;
 
 /**
  * Servlet implementation class NewPostController
@@ -38,8 +41,23 @@ public class NewPostController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		RequestDispatcher rd = getServletContext().getRequestDispatcher("/newpost.jsp");
-		rd.forward(request, response);
+		HttpSession session = request.getSession();
+		String full_name = session.getAttribute("username").toString();
+		String body = request.getParameter("body");
+		String tags = request.getParameter("tags");
+		
+		PostCreator creator = new PostCreator(full_name, body, tags);
+		if (creator.create())
+		{
+			RequestDispatcher rd = getServletContext().getRequestDispatcher("/post_success.jsp");
+			rd.forward(request, response);
+		}
+		else
+		{
+			RequestDispatcher rd = getServletContext().getRequestDispatcher("/post_fail.jsp");
+			rd.forward(request, response);
+		}
+		
 	}
 
 }

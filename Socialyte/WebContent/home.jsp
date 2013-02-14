@@ -21,12 +21,13 @@
 		<div id="top_bar">
 			
 			<div id="logo_div">
-				<a href="./Socialyte"><img src="img/logo.png" id="logo" /></a>
+				<a href="/Socialyte/"><img src="img/logo.png" id="logo" /></a>
 			</div>
 			
 			<div id="menu_items">
+				<a href="/Socialyte/Home"><img src="img/home_US.png" id="home" onmouseover="this.src='img/home_S.png'" onmouseout="this.src='img/home_US.png'"/></a>
 				<img src="img/profile_US.png" id="profile" onmouseover="this.src='img/profile_S.png'" onmouseout="this.src='img/profile_US.png'"/>
-				<img src="img/newpost_US.png" id="new_post" onmouseover="this.src='img/newpost_S.png'" onmouseout="this.src='img/newpost_US.png'"/>
+				<a href="/Socialyte/Post/new"><img src="img/newpost_US.png" id="new_post" onmouseover="this.src='img/newpost_S.png'" onmouseout="this.src='img/newpost_US.png'"/></a>
 				<img src="img/subscriptions_US.png" id="subscriptions" onmouseover="this.src='img/subscriptions_S.png'" onmouseout="this.src='img/subscriptions_US.png'"/>
 				
 			</div>

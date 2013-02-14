@@ -9,6 +9,7 @@ import me.prettyprint.cassandra.serializers.StringSerializer;
 import me.prettyprint.cassandra.serializers.UUIDSerializer;
 import me.prettyprint.cassandra.service.template.ColumnFamilyResult;
 import me.prettyprint.cassandra.service.template.ColumnFamilyTemplate;
+import me.prettyprint.cassandra.service.template.ColumnFamilyUpdater;
 import me.prettyprint.cassandra.service.template.ThriftColumnFamilyTemplate;
 import me.prettyprint.cassandra.utils.TimeUUIDUtils;
 import me.prettyprint.hector.api.Cluster;
@@ -23,6 +24,7 @@ import me.prettyprint.hector.api.query.RangeSlicesQuery;
 public class DBConnection {
 	
 	ColumnFamilyTemplate<String, String> template;
+	ColumnFamilyTemplate<UUID, String> UUIDtemplate;
 	Cluster cassCluster;
 	Keyspace cassKeyspace;
 	String _CF;
@@ -43,12 +45,19 @@ public class DBConnection {
 			
 			cassKeyspace = HFactory.createKeyspace("TESTSPACE", cassCluster);
 					
-			
+		
 			//DEFINE TEMPLATE FOR COLUMNFAMILY
 			template =  new ThriftColumnFamilyTemplate<String, String>(cassKeyspace,
 	                                                               columnFamily,
 	                                                               StringSerializer.get(),
-	                                                               StringSerializer.get());		
+	                                                               StringSerializer.get());	
+		
+			//DEFINE TEMPLATE FOR COLUMNFAMILY
+			UUIDtemplate =  new ThriftColumnFamilyTemplate<UUID, String>(cassKeyspace,
+	                                                               columnFamily,
+	                                                               UUIDSerializer.get(),
+	                                                               StringSerializer.get());	
+		
 			return true;
 		}
 		catch (HectorException e)
@@ -61,12 +70,12 @@ public class DBConnection {
 	{		
 		LinkedList<Row<UUID, String, String>> llist = new LinkedList<Row<UUID, String, String>>();
 		
-		int row_count = 3;
+		int row_count = 100;
 
         RangeSlicesQuery<UUID, String, String> rangeSlicesQuery = HFactory
             .createRangeSlicesQuery(cassKeyspace, UUIDSerializer.get(), StringSerializer.get(), StringSerializer.get())
             .setColumnFamily("POSTS")
-            .setRange("", "", false, 3)
+            .setRange("", "", false, 100)
             .setRowCount(row_count);
 
         rangeSlicesQuery.setKeys(null, null);
@@ -88,6 +97,36 @@ public class DBConnection {
 
 	    
 	    return llist;
+	}
+	
+	public boolean createPost(String _full_name, String _body, String _tags)
+	{
+		UUID timeUUID = generateTimeUUID();
+		
+		// UPDATE / CREATE CODE
+		// <String, String> correspond to key and Column name.
+		ColumnFamilyUpdater<UUID, String> nameUpdater = UUIDtemplate.createUpdater(timeUUID);
+		nameUpdater.setString("full_name", _full_name);
+		nameUpdater.setLong("time", System.currentTimeMillis());
+		
+		ColumnFamilyUpdater<UUID, String> bodyUpdater = UUIDtemplate.createUpdater(timeUUID);
+		bodyUpdater.setString("body", _body);
+		bodyUpdater.setLong("time", System.currentTimeMillis());
+		
+		ColumnFamilyUpdater<UUID, String> tagsUpdater = UUIDtemplate.createUpdater(timeUUID);
+		tagsUpdater.setString("tags", _tags);
+		tagsUpdater.setLong("time", System.currentTimeMillis());
+
+		UUIDtemplate.update(nameUpdater);
+		UUIDtemplate.update(bodyUpdater);
+		UUIDtemplate.update(tagsUpdater);
+		try {
+		    
+		} catch (HectorException e) {
+		    return false;
+		}
+		
+		return true;
 	}
 	
 	private UUID generateTimeUUID()
