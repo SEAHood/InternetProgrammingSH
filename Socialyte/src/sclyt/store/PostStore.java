@@ -69,6 +69,11 @@ public class PostStore {
 		return str_date;
 	}
 	
+	public long getDateAsLong()
+	{
+		return post_date.getTime();
+	}
+	
 	public void setRowContents(String newContents)
 	{
 		rowcontents = newContents;

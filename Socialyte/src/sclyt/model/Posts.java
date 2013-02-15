@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import me.prettyprint.cassandra.utils.TimeUUIDUtils;
 import me.prettyprint.hector.api.beans.Row;
+import me.prettyprint.hector.api.exceptions.HectorException;
 
 import sclyt.store.PostStore;
 
@@ -24,16 +25,35 @@ public class Posts {
 	{
 		int post_count = 0;
 		
-		LinkedList<PostStore> postList = new LinkedList<PostStore>();
+		LinkedList<PostStore> post_list = new LinkedList<PostStore>();
+		LinkedList<Row<Long, String, String>> post_list_unformatted = null;
+		boolean connected = false;
+		boolean err_found = false;
 		
-		DBConnection DBConn = new DBConnection();
-		DBConn.connect("ALL_POSTS");
 		
-		LinkedList<Row<Long, String, String>> llist = DBConn.queryPosts();
+		while (!connected)
+		{
+			try 
+			{
+				DBConnection DBConn = new DBConnection();
+				DBConn.connect("ALL_POSTS");
+				
+				post_list_unformatted = DBConn.queryPosts();
+			}
+			catch (HectorException e)
+			{
+				err_found = true;		
+			}
+			
+			if (!err_found)
+			{
+				connected = true;
+			}
+		}
 		
 		Iterator<Row<Long, String, String>> iterator;
 		
-		iterator = llist.iterator();
+		iterator = post_list_unformatted.iterator();
 		
 		while (iterator.hasNext())
 		{
@@ -51,39 +71,84 @@ public class Posts {
 			singlePost.setBody(post_body);
 			singlePost.setDate(post_date);
 			
-			postList.add(singlePost);
+			post_list.add(singlePost);
 			post_count++;
 		}
 
-		//BIG SHITTY SORT
-		/*long[] sorted_dates = new long[post_count];
+		//BIG SHITTY SORT////////////////////////////////////////////////////////////////////////////////////////////
+		long[] sorted_dates = new long[post_count];
 		int count = 0;
 		
-		LinkedList<Row<Long, String, String>> sorted_list;
+		Iterator<Row<Long, String, String>> post_iterator;
 		
-		Iterator<Row<Long, String, String>> sort_iterator;
+		post_iterator = post_list_unformatted.iterator();
 		
-		sort_iterator = llist.iterator();
-		
-		while (sort_iterator.hasNext())
+		while (post_iterator.hasNext())
 		{
-			Row<Long, String, String> row = (Row<Long, String, String>)sort_iterator.next();
+			Row<Long, String, String> row = (Row<Long, String, String>)post_iterator.next();
 			sorted_dates[count] = row.getKey();
 			count++;
 		}
-		
-		sort_iterator = llist.iterator();
-		
-		while (sort_iterator.hasNext())
-		{
-			for (int i = 0; i < post_count; i++)
-			{
 				
-			
-			}
-		}*/
+		//Sort longs
+		long temp;
 		
-		return postList;
+		while (!isSorted(sorted_dates))
+		{
+			for (int j = 0; j < sorted_dates.length - 1; j++)
+			{
+				temp = sorted_dates[j];
+				
+				if (sorted_dates[j+1] > temp)
+				{
+					sorted_dates[j] = sorted_dates[j+1];
+					sorted_dates[j+1] = temp;
+				}
+			}
+		}
+		
+		/*DEBUG
+		System.out.println("sorted_dates listing:");
+		for (int x = 0; x < sorted_dates.length; x++)
+		{
+			System.out.println(sorted_dates[x]);
+		}
+		System.out.println("---------------------");		
+		EOD*/
+				
+		LinkedList<PostStore> sorted_list = new LinkedList<PostStore>();
+		
+		for (int i = 0; i < sorted_dates.length; i++)
+		{
+			Iterator<PostStore> sort_iterator = post_list.iterator();
+			while (sort_iterator.hasNext())
+			{
+				PostStore post = (PostStore)sort_iterator.next();
+				
+				//System.out.println("sorted_dates[i]: " + sorted_dates[i]);
+				if (sorted_dates[i] == post.getDateAsLong())
+				{
+					sorted_list.add(post);
+					System.out.println(post.getDateAsLong());
+				}
+				
+			}
+		}
+		
+		//END OF SHITTY SORT///////////////////////////////////////////////////////////////////////////////////////
+		
+		return sorted_list;
+	}
+	
+	
+	private boolean isSorted(long[] array)
+	{
+		for (int i = 0; i < array.length - 1; i++)
+		{
+			if (array[i+1] > array[i])
+				return false;
+		}
+		return true;
 	}
 
 }
