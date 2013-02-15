@@ -17,7 +17,7 @@ public class PostCreator {
 	{
 		DBConnection DBConn = new DBConnection();
 		
-		if (DBConn.connect("POSTS"))
+		if (DBConn.connect("ALL_POSTS"))
 		{
 			if (!DBConn.createPost(full_name, body, tags))
 				return false;

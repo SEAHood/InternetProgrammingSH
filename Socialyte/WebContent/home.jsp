@@ -53,9 +53,9 @@
 					</div>
 					<div id="user_controls">
 						<form name="logout_form" method="POST" action="./Login">
-						<input type="hidden" id="logout" name="logout">
-		        		<input class="blue_button" id="logout_button" type="submit" value="Logout" >
-	    			</form>
+							<input type="hidden" id="logout" name="logout">
+		        			<input class="blue_button" id="logout_button" type="submit" value="Logout" >
+	    				</form>
 					</div>
 					
 				</div>
@@ -82,6 +82,7 @@
 						String full_name = row.getFullName();
 						String tags = row.getTags();
 						String body = row.getBody();
+						String date = row.getDateAsString();
 						%>
 						<div class="post_right">
 							<div class="post_username">
@@ -97,7 +98,7 @@
 							</div>
 							
 							<div class="post_date">
-							{date}
+								<%=date %>
 							</div>
 						
 							</div>

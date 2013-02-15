@@ -55,12 +55,14 @@
 }
 	
 .post_tags {
+	margin-top:5px;
 	font-size:small;
 	color:#808080;
 	float:left;
 }
 
 .post_date {
+	margin-top:5px;
 	font-size:small;
 	color:#808080;
 	float:right;

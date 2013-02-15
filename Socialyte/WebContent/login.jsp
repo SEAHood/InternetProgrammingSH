@@ -16,12 +16,20 @@
 
 		<div id="top_bar">
 			
-			<a href="/"><img src="img/logo.png" id="logo" /></a>
-			<form id="search_box" action="" method="GET" >
-				<input class="blue_textbox" type="text" name="search" size="35" placeholder="Search for anything..">
-				<input class="blue_button" id="submit_search" type="submit" value="Go" >
-			</form>
-
+			<div id="logo_div">
+				<a href="/Socialyte/"><img src="img/logo.png" id="logo" /></a>
+			</div>
+			
+			<div id="menu_items">
+				
+			</div>
+			
+			<div id="search_div">
+				<form id="search_box" action="" method="GET" >
+					<input class="blue_textbox" type="text" name="search" size="35" placeholder="Search for anything..">
+					<input class="blue_button" id="submit_search" type="submit" value="Go" >
+				</form>
+			</div>
 		</div>
 			
 		<div id="content">

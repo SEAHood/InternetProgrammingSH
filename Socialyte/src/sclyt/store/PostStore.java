@@ -1,10 +1,14 @@
 package sclyt.store;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class PostStore {
 
 	String post_full_name;
 	String post_tags;
 	String post_body;
+	Date post_date;
 	
 	
 	String rowcontents;
@@ -25,6 +29,14 @@ public class PostStore {
 		post_body = _body;
 	}
 	
+	public void setDate(Date _date)
+	{
+		post_date = _date;
+	}
+	
+	
+	
+	
 	public String getFullName()
 	{
 		return post_full_name;
@@ -40,6 +52,22 @@ public class PostStore {
 		return post_body;
 	}
 	
+	public Date getDate()
+	{
+		return post_date;
+	}
+	
+	public String getDateAsString()
+	{
+		//String str_date;
+		
+		//str_date = post_date.toString();
+		
+		SimpleDateFormat s = new SimpleDateFormat("HH:mm dd/MM/yy");
+		String str_date = s.format(post_date);
+		
+		return str_date;
+	}
 	
 	public void setRowContents(String newContents)
 	{

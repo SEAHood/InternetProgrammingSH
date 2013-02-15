@@ -24,7 +24,8 @@ import me.prettyprint.hector.api.query.RangeSlicesQuery;
 public class DBConnection {
 	
 	ColumnFamilyTemplate<String, String> template;
-	ColumnFamilyTemplate<UUID, String> UUIDtemplate;
+	ColumnFamilyTemplate<UUID, String> UUIDTemplate;
+	ColumnFamilyTemplate<Long, String> LongTemplate;
 	Cluster cassCluster;
 	Keyspace cassKeyspace;
 	String _CF;
@@ -53,9 +54,15 @@ public class DBConnection {
 	                                                               StringSerializer.get());	
 		
 			//DEFINE TEMPLATE FOR COLUMNFAMILY
-			UUIDtemplate =  new ThriftColumnFamilyTemplate<UUID, String>(cassKeyspace,
+			UUIDTemplate =  new ThriftColumnFamilyTemplate<UUID, String>(cassKeyspace,
 	                                                               columnFamily,
 	                                                               UUIDSerializer.get(),
+	                                                               StringSerializer.get());	
+			
+			//DEFINE TEMPLATE FOR COLUMNFAMILY
+			LongTemplate =  new ThriftColumnFamilyTemplate<Long, String>(cassKeyspace,
+	                                                               columnFamily,
+	                                                               LongSerializer.get(),
 	                                                               StringSerializer.get());	
 		
 			return true;
@@ -66,28 +73,27 @@ public class DBConnection {
 		}
 	}
 	
-	public LinkedList<Row<UUID, String, String>> queryPosts()
+	public LinkedList<Row<Long, String, String>> queryPosts()
 	{		
-		LinkedList<Row<UUID, String, String>> llist = new LinkedList<Row<UUID, String, String>>();
+		LinkedList<Row<Long, String, String>> llist = new LinkedList<Row<Long, String, String>>();
 		
 		int row_count = 100;
 
-        RangeSlicesQuery<UUID, String, String> rangeSlicesQuery = HFactory
-            .createRangeSlicesQuery(cassKeyspace, UUIDSerializer.get(), StringSerializer.get(), StringSerializer.get())
-            .setColumnFamily("POSTS")
+        RangeSlicesQuery<Long, String, String> rangeSlicesQuery = HFactory
+            .createRangeSlicesQuery(cassKeyspace, LongSerializer.get(), StringSerializer.get(), StringSerializer.get())
+            .setColumnFamily("ALL_POSTS")
             .setRange("", "", false, 100)
             .setRowCount(row_count);
 
         rangeSlicesQuery.setKeys(null, null);
-            
-        QueryResult<OrderedRows<UUID, String, String>> result = rangeSlicesQuery.execute();
-        OrderedRows<UUID, String, String> rows = result.get();
-        Iterator<Row<UUID, String, String>> rowsIterator = rows.iterator();
+        QueryResult<OrderedRows<Long, String, String>> result = rangeSlicesQuery.execute();
+        OrderedRows<Long, String, String> rows = result.get();
+        Iterator<Row<Long, String, String>> rowsIterator = rows.iterator();
  
 
         while (rowsIterator.hasNext()) 
         {
-        	Row<UUID, String, String> row = rowsIterator.next();
+        	Row<Long, String, String> row = rowsIterator.next();
 
             if (row.getColumnSlice().getColumns().isEmpty()) 
                 continue;
@@ -102,27 +108,31 @@ public class DBConnection {
 	public boolean createPost(String _full_name, String _body, String _tags)
 	{
 		UUID timeUUID = generateTimeUUID();
-		
+		long timestamp = System.currentTimeMillis();
 		// UPDATE / CREATE CODE
 		// <String, String> correspond to key and Column name.
-		ColumnFamilyUpdater<UUID, String> nameUpdater = UUIDtemplate.createUpdater(timeUUID);
+		//ColumnFamilyUpdater<UUID, String> nameUpdater = UUIDTemplate.createUpdater(timeUUID);
+		ColumnFamilyUpdater<Long, String> nameUpdater = LongTemplate.createUpdater(timestamp);
 		nameUpdater.setString("full_name", _full_name);
 		nameUpdater.setLong("time", System.currentTimeMillis());
 		
-		ColumnFamilyUpdater<UUID, String> bodyUpdater = UUIDtemplate.createUpdater(timeUUID);
+		//ColumnFamilyUpdater<UUID, String> bodyUpdater = UUIDTemplate.createUpdater(timeUUID);
+		ColumnFamilyUpdater<Long, String> bodyUpdater = LongTemplate.createUpdater(timestamp);
 		bodyUpdater.setString("body", _body);
 		bodyUpdater.setLong("time", System.currentTimeMillis());
 		
-		ColumnFamilyUpdater<UUID, String> tagsUpdater = UUIDtemplate.createUpdater(timeUUID);
+		//ColumnFamilyUpdater<UUID, String> tagsUpdater = UUIDTemplate.createUpdater(timeUUID);
+		ColumnFamilyUpdater<Long, String> tagsUpdater = LongTemplate.createUpdater(timestamp);
 		tagsUpdater.setString("tags", _tags);
 		tagsUpdater.setLong("time", System.currentTimeMillis());
 
-		UUIDtemplate.update(nameUpdater);
-		UUIDtemplate.update(bodyUpdater);
-		UUIDtemplate.update(tagsUpdater);
+		
 		try {
-		    
+			LongTemplate.update(nameUpdater);
+			LongTemplate.update(bodyUpdater);
+			LongTemplate.update(tagsUpdater);		    
 		} catch (HectorException e) {
+			System.out.println(e.getMessage());
 		    return false;
 		}
 		

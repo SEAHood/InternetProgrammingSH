@@ -71,9 +71,6 @@ public class Login {
 			}
 			catch (HectorException e)
 			{
-				timer++;
-				if (timer > timeout)
-					return false;
 				err_found = true;		
 			}
 			
