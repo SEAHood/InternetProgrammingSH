@@ -1,4 +1,4 @@
-package sclyt.store;
+package org.sclyt.store;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

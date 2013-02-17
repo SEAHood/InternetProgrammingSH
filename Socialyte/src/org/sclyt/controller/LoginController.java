@@ -1,4 +1,4 @@
-package sclyt.controller;
+package org.sclyt.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -11,7 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import sclyt.model.Login;
+import org.sclyt.model.Login;
+import org.sclyt.store.Session;
+
 
 /**
  * Servlet implementation class LoginController
@@ -41,11 +43,13 @@ public class LoginController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		HttpSession session = request.getSession();
 		PrintWriter out = response.getWriter();
+		
 		if (request.getParameter("logout") != null)
 		{
-			HttpSession session = request.getSession();
-			session.removeAttribute("username");
+			session.removeAttribute("session");
+			
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/Home");
 			rd.forward(request, response);			
 		}
@@ -68,8 +72,11 @@ public class LoginController extends HttpServlet {
 			if (success)
 			{
 				//out.println("LOGIN!");
-				HttpSession session = request.getSession();
-				session.setAttribute("username", username);
+				Session thisSession = new Session();
+				thisSession.setUsername(username);
+				
+				session.setAttribute("session", thisSession);
+				
 				//out.println(session.getAttribute("username"));
 				RequestDispatcher rd = getServletContext().getRequestDispatcher("/Home");
 				rd.forward(request, response);

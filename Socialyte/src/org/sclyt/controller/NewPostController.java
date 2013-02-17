@@ -1,4 +1,4 @@
-package sclyt.controller;
+package org.sclyt.controller;
 
 import java.io.IOException;
 
@@ -10,7 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import sclyt.model.PostCreator;
+import org.sclyt.model.PostCreator;
+import org.sclyt.store.Session;
+
 
 /**
  * Servlet implementation class NewPostController
@@ -42,7 +44,8 @@ public class NewPostController extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		HttpSession session = request.getSession();
-		String full_name = session.getAttribute("username").toString();
+		Session thisSession = (Session)session.getAttribute("session");
+		String full_name = thisSession.getUsername();
 		String body = request.getParameter("body");
 		String tags = request.getParameter("tags");
 		

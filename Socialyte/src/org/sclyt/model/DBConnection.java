@@ -1,4 +1,4 @@
-package sclyt.model;
+package org.sclyt.model;
 
 import java.util.Iterator;
 import java.util.LinkedList;

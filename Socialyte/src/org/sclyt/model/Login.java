@@ -1,4 +1,4 @@
-package sclyt.model;
+package org.sclyt.model;
 
 import me.prettyprint.cassandra.serializers.StringSerializer;
 import me.prettyprint.cassandra.service.template.ColumnFamilyResult;

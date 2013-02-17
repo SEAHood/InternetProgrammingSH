@@ -16,23 +16,49 @@
 	visibility:hidden;
 }	
 
-#login_pane {
-	text-align:center;
-	width:30%;
-	height:30%;
+.signup_textbox {
+}
+
+#login_signup_pane {
+	width:70%;
+	height:100%;
 	margin:auto;
 	padding-top:10%;
 	padding-bottom:5%;
-}	
+	text-align:center;
 	
-#login_img {
-	width:100%;
 }
 
-#username_textbox, #password_textbox {
-	width:55%;
+
+#signup_pane {
+	float:left;
+	text-align:center;
+	width:45%;
+}
+
+#or_partition {
+	width:10%;
+	float:left;
+}
+
+#login_pane {
+	margin-top:100px;
+	float:right;
+	text-align:center;
+	width:45%;
+}	
+	
+#signup_pane img {
+	width:300px;
+}
+
+#login_pane img {
+}
+
+.form_textbox {
 	text-align:center;
   	font-weight: bold;
+	margin-bottom: 10px;
 }
 
 #submit_login {
@@ -41,4 +67,5 @@
 
 #signup_text {
 	font-size:small;
+  	font-weight: bold;
 }	

@@ -1,4 +1,4 @@
-package sclyt.controller;
+package org.sclyt.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,9 +13,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.sclyt.model.Posts;
+import org.sclyt.store.Session;
+
 import me.prettyprint.hector.api.beans.Row;
 
-import sclyt.model.Posts;
 
 /**
  * Servlet implementation class HomeController
@@ -52,19 +54,20 @@ public class HomeController extends HttpServlet {
 	private void directToHome(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
 	{
 		HttpSession session = req.getSession();
-		String session_username = (String)session.getAttribute("username");
-		
+		//String session_username = (String)session.getAttribute("username");
+		Session thisSession = (Session)session.getAttribute("session");
 		
 		//posts.getPosts();
 
-		PrintWriter out = res.getWriter();
+		//PrintWriter out = res.getWriter();
 		//out.println("TEST");
 		
 		
-		if(session.getAttribute("username") != null)
+		if(thisSession != null)
 		{
 			Posts posts = new Posts();
 			req.setAttribute("Posts", posts.getPosts());
+			req.setAttribute("Session", thisSession);
 			
 			
 			

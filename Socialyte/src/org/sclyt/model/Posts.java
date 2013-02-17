@@ -1,4 +1,4 @@
-package sclyt.model;
+package org.sclyt.model;
 
 import java.text.Collator;
 import java.util.Collections;
@@ -8,11 +8,12 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.UUID;
 
+import org.sclyt.store.PostStore;
+
 import me.prettyprint.cassandra.utils.TimeUUIDUtils;
 import me.prettyprint.hector.api.beans.Row;
 import me.prettyprint.hector.api.exceptions.HectorException;
 
-import sclyt.store.PostStore;
 
 public class Posts {
 	
@@ -77,7 +78,10 @@ public class Posts {
 
 		//BIG SHITTY SORT////////////////////////////////////////////////////////////////////////////////////////////
 		long[] sorted_dates = new long[post_count];
-		int count = 0;
+		int countT = 0;
+		int count1 = 0;
+		int count2 = 0;
+		int count3 = 0;
 		
 		Iterator<Row<Long, String, String>> post_iterator;
 		
@@ -86,8 +90,9 @@ public class Posts {
 		while (post_iterator.hasNext())
 		{
 			Row<Long, String, String> row = (Row<Long, String, String>)post_iterator.next();
-			sorted_dates[count] = row.getKey();
-			count++;
+			sorted_dates[countT] = row.getKey();
+			countT++;
+			count1++;
 		}
 				
 		//Sort longs
@@ -103,6 +108,9 @@ public class Posts {
 				{
 					sorted_dates[j] = sorted_dates[j+1];
 					sorted_dates[j+1] = temp;
+					countT++;
+					count2++;
+					continue;
 				}
 			}
 		}
@@ -117,7 +125,7 @@ public class Posts {
 		EOD*/
 				
 		LinkedList<PostStore> sorted_list = new LinkedList<PostStore>();
-		
+				
 		for (int i = 0; i < sorted_dates.length; i++)
 		{
 			Iterator<PostStore> sort_iterator = post_list.iterator();
@@ -129,12 +137,18 @@ public class Posts {
 				if (sorted_dates[i] == post.getDateAsLong())
 				{
 					sorted_list.add(post);
-					System.out.println(post.getDateAsLong());
+					System.out.println("Post timestamp requested: " + post.getDateAsLong());
+					countT++;
+					count3++;
+					break;
 				}
-				
+				countT++;
+				count3++;
 			}
 		}
 		
+		System.out.println("Sorting posts completed: " + countT + " cycles done in total.");
+		System.out.println("While 1: " + count1 + " - While 2: " + count2 + " - While 3: " + count3 + "\n\n");
 		//END OF SHITTY SORT///////////////////////////////////////////////////////////////////////////////////////
 		
 		return sorted_list;

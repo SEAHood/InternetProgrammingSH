@@ -2,8 +2,8 @@
     pageEncoding="ISO-8859-1"%>
     
     <%@ page import="java.util.*" %>
-    <%@ page import="sclyt.store.*" %>
-    
+    <%@ page import="org.sclyt.store.*" %>
+  
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -47,7 +47,11 @@
 						<img src="img/avatar.png" />
 					</div>
 					<div id="user_info">
-						{username}<br/>
+						<% 
+							Session thisSession = (Session)request.getAttribute("Session");
+							String username = thisSession.getUsername();	
+						%>
+						<%=username %><br/>
 						{post count}<br/>
 						{info}
 					</div>
@@ -67,7 +71,6 @@
 					Iterator<PostStore> iterator;
 					
 					iterator = posts.iterator();
-					
 					while (iterator.hasNext())
 					{ %>
 						<div class="post">
