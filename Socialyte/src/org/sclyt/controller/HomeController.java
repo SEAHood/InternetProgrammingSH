@@ -69,8 +69,6 @@ public class HomeController extends HttpServlet {
 			req.setAttribute("Posts", posts.getPosts());
 			req.setAttribute("Session", thisSession);
 			
-			
-			
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/home.jsp");
 			rd.forward(req, res);
 		

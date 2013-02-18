@@ -14,7 +14,32 @@
 	text-align:center;
 	padding:5px;
 	visibility:hidden;
-}	
+}
+
+.message_popup {
+	z-index:1000;
+	background-color:#F0F0F0; /*#99CCFF*/
+	position:absolute;
+	top:50px;
+	left:50%;
+	width:300px;
+	height:45px;
+	margin:0 0 0 -150px;
+	border:1px solid #808080;
+	border-radius:10px;
+	text-align:center;
+	padding:5px;
+}
+
+#green_text {
+	color:green;
+	font-weight:bold;
+}
+
+#red_text {
+	color:red;
+	font-weight:bold;
+}
 
 .signup_textbox {
 }

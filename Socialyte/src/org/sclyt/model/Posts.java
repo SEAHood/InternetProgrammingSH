@@ -37,7 +37,7 @@ public class Posts {
 			try 
 			{
 				DBConnection DBConn = new DBConnection();
-				DBConn.connect("ALL_POSTS");
+				DBConn.connect();
 				
 				post_list_unformatted = DBConn.queryPosts();
 			}
@@ -77,6 +77,7 @@ public class Posts {
 		}
 
 		//BIG SHITTY SORT////////////////////////////////////////////////////////////////////////////////////////////
+		System.out.println("Post sort started..");
 		long[] sorted_dates = new long[post_count];
 		int countT = 0;
 		int count1 = 0;
@@ -115,14 +116,6 @@ public class Posts {
 			}
 		}
 		
-		/*DEBUG
-		System.out.println("sorted_dates listing:");
-		for (int x = 0; x < sorted_dates.length; x++)
-		{
-			System.out.println(sorted_dates[x]);
-		}
-		System.out.println("---------------------");		
-		EOD*/
 				
 		LinkedList<PostStore> sorted_list = new LinkedList<PostStore>();
 				
@@ -137,7 +130,6 @@ public class Posts {
 				if (sorted_dates[i] == post.getDateAsLong())
 				{
 					sorted_list.add(post);
-					System.out.println("Post timestamp requested: " + post.getDateAsLong());
 					countT++;
 					count3++;
 					break;
@@ -148,7 +140,8 @@ public class Posts {
 		}
 		
 		System.out.println("Sorting posts completed: " + countT + " cycles done in total.");
-		System.out.println("While 1: " + count1 + " - While 2: " + count2 + " - While 3: " + count3 + "\n\n");
+		System.out.println("While 1: " + count1 + " - While 2: " + count2 + " - While 3: " + count3);
+		System.out.println("Post sort ended..\n\n");
 		//END OF SHITTY SORT///////////////////////////////////////////////////////////////////////////////////////
 		
 		return sorted_list;

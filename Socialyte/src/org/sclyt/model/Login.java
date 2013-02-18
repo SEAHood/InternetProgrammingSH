@@ -1,5 +1,7 @@
 package org.sclyt.model;
 
+import org.sclyt.store.Session;
+
 import me.prettyprint.cassandra.serializers.StringSerializer;
 import me.prettyprint.cassandra.service.template.ColumnFamilyResult;
 import me.prettyprint.cassandra.service.template.ColumnFamilyTemplate;
@@ -13,7 +15,7 @@ import me.prettyprint.hector.api.factory.HFactory;
 public class Login {
 	
 	ColumnFamilyTemplate<String, String> template;
-	
+	DBConnection DBConn;
 	String login_username;
 	String login_password;
 	
@@ -28,72 +30,31 @@ public class Login {
 	
 	public boolean setup()
 	{
-		try {
-			//INITIALISE CONNECTION
-			Cluster cassCluster;
-			Keyspace cassKeyspace;
-			
-			
-			cassCluster = HFactory.getOrCreateCluster("Test Cluster","77.99.214.115:9160");
-			
-			cassKeyspace = HFactory.createKeyspace("TESTSPACE", cassCluster);
-					
-			
-			//DEFINE TEMPLATE FOR COLUMNFAMILY
-			template =  new ThriftColumnFamilyTemplate<String, String>(cassKeyspace,
-	                                                               "LOGIN",
-	                                                               StringSerializer.get(),
-	                                                               StringSerializer.get());		
-			return true;
-		}
-		catch (HectorException e)
-		{
-			return false;
-		}
+		DBConn = new DBConnection();
+		boolean success = DBConn.connect();
+		return success;
 	}
 	
 	public boolean execute()
 	{
-		ColumnFamilyResult<String, String> res = null;
-		boolean connected = false;
-		boolean err_found = false;
-		
-		int timeout = 2;
-		int timer = 0;
-		
-		while (!connected)
-		{
-			err_found = false;
-			
-			try
-			{
-				res = template.queryColumns(login_username);
-			}
-			catch (HectorException e)
-			{
-				err_found = true;		
-			}
-			
-			if (!err_found)
-			{
-				connected = true;
-			}
-		}
-		
-		
-		String value = res.getString("password");
-	    
-	    if (value != null)
-	    {
-		    if (value.equals(login_password))
-		    	return true;
-		    else
-		    	return false;
-	    }
-	    else
-	    	return false;
+		if (DBConn.attemptLogin(login_username, login_password))
+			return true;
+		else
+			return false;		
 	}
 	
-	
+	public Session createSession()
+	{
+		Session thisSession = new Session();
+
+		String avatar = DBConn.fetchAvatar(login_username);
+		String full_name = DBConn.fetchFullName(login_username);
+		
+		thisSession.setUsername(login_username);
+		thisSession.setAvatar(avatar);
+		thisSession.setFullName(full_name);		
+		
+		return thisSession;
+	}
 
 }

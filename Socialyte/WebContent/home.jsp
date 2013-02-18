@@ -13,6 +13,14 @@
 <link rel="stylesheet" type="text/css" href="/Socialyte/css/main_style.css">
 <link rel="stylesheet" type="text/css" href="/Socialyte/css/post_style.css">
 
+<link rel="stylesheet" type="text/css" href="css/tooltipster.css" />
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script type="text/javascript" src="js/jquery.tooltipster.min.js"></script>
+<script>
+	$(document).ready(function() {
+	    $('.tooltip').tooltipster();
+	});
+</script>
 </head>
 
 <body>
@@ -25,16 +33,16 @@
 			</div>
 			
 			<div id="menu_items">
-				<a href="/Socialyte/Home"><img src="img/home_US.png" id="home" onmouseover="this.src='img/home_S.png'" onmouseout="this.src='img/home_US.png'"/></a>
-				<img src="img/profile_US.png" id="profile" onmouseover="this.src='img/profile_S.png'" onmouseout="this.src='img/profile_US.png'"/>
-				<a href="/Socialyte/Post/new"><img src="img/newpost_US.png" id="new_post" onmouseover="this.src='img/newpost_S.png'" onmouseout="this.src='img/newpost_US.png'"/></a>
-				<img src="img/subscriptions_US.png" id="subscriptions" onmouseover="this.src='img/subscriptions_S.png'" onmouseout="this.src='img/subscriptions_US.png'"/>
+				<a href="/Socialyte/Home" class="tooltip" title="Home"><img src="img/home_US.png" id="home" onmouseover="this.src='img/home_S.png'" onmouseout="this.src='img/home_US.png'"/></a>
+				<a href="#" class="tooltip" title="My Profile"><img src="img/profile_US.png" id="profile" onmouseover="this.src='img/profile_S.png'" onmouseout="this.src='img/profile_US.png'"/></a>
+				<a href="/Socialyte/Post/new" class="tooltip" title="New Post"><img src="img/newpost_US.png" id="new_post" onmouseover="this.src='img/newpost_S.png'" onmouseout="this.src='img/newpost_US.png'"/></a>
+				<a href="#" class="tooltip" title="Subscriptions"><img src="img/subscriptions_US.png"  id="subscriptions" onmouseover="this.src='img/subscriptions_S.png'" onmouseout="this.src='img/subscriptions_US.png'"/></a>
 				
 			</div>
 			
 			<div id="search_div">
 				<form id="search_box" action="" method="GET" >
-					<input class="blue_textbox" type="text" name="search" size="35" placeholder="Search for anything..">
+					<input class="blue_textbox" type="text" name="search" size="25" placeholder="Search for anything..">
 					<input class="blue_button" id="submit_search" type="submit" value="Go" >
 				</form>
 			</div>
@@ -44,14 +52,17 @@
 		
 				<div id="user_pane">
 					<div id="user_avatar">
-						<img src="img/avatar.png" />
+						<% 
+							Session thisSession = (Session)request.getAttribute("Session");
+							String avatar = thisSession.getAvatar();
+						%>
+						<img src="<%=avatar %>" />
 					</div>
 					<div id="user_info">
 						<% 
-							Session thisSession = (Session)request.getAttribute("Session");
-							String username = thisSession.getUsername();	
+							String session_full_name = thisSession.getFullName();	
 						%>
-						<%=username %><br/>
+						<strong><%=session_full_name %></strong><br/>
 						{post count}<br/>
 						{info}
 					</div>
@@ -76,12 +87,11 @@
 						<div class="post">
 							<div class="post_left">
 								<div class="post_avatar">
-									<img src="img/avatar.png" />
+									<img src="<%=avatar %>" />
 								</div>
 							</div>
 						<%
 						PostStore row = (PostStore)iterator.next();
-						String rowContents = row.getRowContents();
 						String full_name = row.getFullName();
 						String tags = row.getTags();
 						String body = row.getBody();

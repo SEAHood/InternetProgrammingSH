@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+    
+<%@ page import="org.sclyt.store.Session" %>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -9,14 +12,14 @@
 <link rel="stylesheet" type="text/css" href="/Socialyte/css/main_style.css">
 <link rel="stylesheet" type="text/css" href="/Socialyte/css/newpost_style.css">
 
-<script type="text/JavaScript">
-<!--
-function timedRefresh(timeoutPeriod) {
-	setTimeout("location.reload(true);",timeoutPeriod);
-}
-//   -->
+<link rel="stylesheet" type="text/css" href="/Socialyte/css/tooltipster.css" />
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script type="text/javascript" src="/Socialyte/js/jquery.tooltipster.min.js"></script>
+<script>
+	$(document).ready(function() {
+	    $('.tooltip').tooltipster();
+	});
 </script>
-
 </head>
 
 <body>
@@ -29,40 +32,50 @@ function timedRefresh(timeoutPeriod) {
 			</div>
 			
 			<div id="menu_items">
-				<a href="/Socialyte/Home"><img src="/Socialyte/img/home_US.png" id="home_button" onmouseover="this.src='/Socialyte/img/home_S.png'" onmouseout="this.src='/Socialyte/img/home_US.png'"/></a>
-				<img src="/Socialyte/img/profile_US.png" id="profile_button" onmouseover="this.src='/Socialyte/img/profile_S.png'" onmouseout="this.src='/Socialyte/img/profile_US.png'"/>
-				<a href="/Socialyte/Post/new"><img src="/Socialyte/img/newpost_US.png" id="new_post_button" onmouseover="this.src='/Socialyte/img/newpost_S.png'" onmouseout="this.src='/Socialyte/img/newpost_US.png'"/></a>
-				<img src="/Socialyte/img/subscriptions_US.png" id="subscriptions_button" onmouseover="this.src='/Socialyte/img/subscriptions_S.png'" onmouseout="this.src='/Socialyte/img/subscriptions_US.png'"/>
+				<a href="/Socialyte/Home" class="tooltip" title="Home"><img src="/Socialyte/img/home_US.png" id="home" onmouseover="this.src='/Socialyte/img/home_S.png'" onmouseout="this.src='/Socialyte/img/home_US.png'"/></a>
+				
+				<a href="#" class="tooltip" title="My Profile"><img src="/Socialyte/img/profile_US.png" id="profile" onmouseover="this.src='/Socialyte/img/profile_S.png'" onmouseout="this.src='/Socialyte/img/profile_US.png'"/></a>
+				
+				<a href="/Socialyte/Post/new" class="tooltip" title="New Post"><img src="/Socialyte/img/newpost_US.png" id="add_post" onmouseover="this.src='/Socialyte/img/newpost_S.png'" onmouseout="this.src='/Socialyte/img/newpost_US.png'"/></a>
+				
+				<a href="#" class="tooltip" title="Subscriptions"><img src="/Socialyte/img/subscriptions_US.png"  id="subscriptions" onmouseover="this.src='/Socialyte/img/subscriptions_S.png'" onmouseout="this.src='/Socialyte/img/subscriptions_US.png'"/></a>
 				
 			</div>
 			
 			<div id="search_div">
 				<form id="search_box" action="" method="GET" >
-					<input class="blue_textbox" type="text" name="search" size="35" placeholder="Search for anything..">
+					<input class="blue_textbox" type="text" name="search" size="25" placeholder="Search for anything..">
 					<input class="blue_button" id="submit_search" type="submit" value="Go" >
 				</form>
 			</div>
-
 		</div>
 			
 		<div id="content">
+		
 			<div id="user_pane">
-				<div id="user_avatar">
-					<img src="/Socialyte/img/avatar.png" />
-				</div>
-				<div id="user_info">
-					{username}<br/>
-					{post count}<br/>
-					{info}
-				</div>
-				<div id="user_controls">
-					<form name="logout_form" method="POST" action="/Socialyte/Login">
-						<input type="hidden" id="logout" name="logout">
-	        			<input class="blue_button" id="logout_button" type="submit" value="Logout" >
-    				</form>
-				</div>
+					<div id="user_avatar">
+						<% 
+							Session thisSession = (Session)request.getAttribute("Session");
+							String avatar = thisSession.getAvatar();
+						%>
+						<img src="<%=avatar %>" />
+					</div>
+					<div id="user_info">
+						<% 
+							String session_full_name = thisSession.getFullName();	
+						%>
+						<strong><%=session_full_name %></strong><br/>
+						{post count}<br/>
+						{info}
+					</div>
+					<div id="user_controls">
+						<form name="logout_form" method="POST" action="./Login">
+							<input type="hidden" id="logout" name="logout">
+		        			<input class="blue_button" id="logout_button" type="submit" value="Logout" >
+	    				</form>
+					</div>
 					
-			</div>
+				</div>
 
 			<div id="new_post_pane">
 				

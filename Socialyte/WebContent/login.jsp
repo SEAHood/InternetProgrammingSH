@@ -8,7 +8,9 @@
 <link rel="shortcut icon" href="img/favicon.ico" />
 <link rel="stylesheet" type="text/css" href="css/main_style.css">
 <link rel="stylesheet" type="text/css" href="css/login_style.css">
-<script type="text/JavaScript" src="js/loading.js"></script> 
+<script type="text/JavaScript" src="js/scripts.js"></script> 
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+
 </head>
 
 <body>
@@ -26,36 +28,56 @@
 			
 			<div id="search_div">
 				<form id="search_box" action="" method="GET" >
-					<input class="blue_textbox" type="text" name="search" size="35" placeholder="Search for anything..">
+					<input class="blue_textbox" type="text" name="search" size="25" placeholder="Search for anything..">
 					<input class="blue_button" id="submit_search" type="submit" value="Go" >
 				</form>
 			</div>
 		</div>
 			
 		<div id="content">
-		
+			<% 
+			String test = "";
+			if (request.getAttribute("account_created") != null)
+			{ %>
+				<div class="message_popup">
+					<span id="green_text">Account created successfully!</span><br/>
+					You may now sign in below.
+				</div>
+			<% } 
+			else if (request.getAttribute("invalid_login") != null)
+			{ %>				
+				<div class="message_popup">
+					<span id="red_text">Invalid login details!</span><br/>
+					Please check and try again
+				</div>
+			<% } %>
+			<script>
+				$('body').click(function () {
+	 				$('.message_popup').fadeOut(1500);
+	  			});
+			</script>
 			<div id="loading_popup">
-				<img src="img/loader_white.gif" /><br/>
-				<img src="img/logging_in_black.png" />
+					<img src="img/loader_white.gif" /><br/>
+					<img src="img/logging_in_black.png" />
 			</div>
-		
+			
 			<div id="login_signup_pane">
 			
 				<div id="signup_pane">
 					<img src="img/sign_up.png" id="sign_up_img" />
 					<form id="login" action="./Signup" method="POST" >
 					<label>First name</label><br/>
-						<input class="form_textbox" id="first_name_textbox" type="text" name="first_name" size="20"><br/>
+						<input class="form_textbox" id="first_name_textbox" type="text" name="first_name" size="25"><br/>
 					<label>Surname</label><br/>						
-						<input class="form_textbox" id="surname_textbox" type="text" name="surname"  size="20"><br/>
+						<input class="form_textbox" id="surname_textbox" type="text" name="surname"  size="25"><br/>
 					<label>Username (to sign in)</label><br/>
-						<input class="form_textbox" id="new_username_textbox" type="text" name="new_username" size="20"><br/>
+						<input class="form_textbox" id="new_username_textbox" type="text" name="new_username" size="25"><br/>
 					<label>Password</label><br/>
-						<input class="form_textbox" id="new_password_textbox" type="password" name="new_password" size="20"><br/>
+						<input class="form_textbox" id="new_password_textbox" type="password" name="new_password" size="25"><br/>
 					<label>Password (confirm)</label><br/>
-						<input class="form_textbox" id="new_password_confirm_textbox" type="password" name="new_password_c" size="20"><br/>
+						<input class="form_textbox" id="new_password_confirm_textbox" type="password" name="new_password_c" size="25"><br/>
 					<label>Email address</label><br/>
-						<input class="form_textbox" id="email_textbox" type="text" name="email" size="35"><br/>
+						<input class="form_textbox" id="email_textbox" type="text" name="email" size="25"><br/>
 						<input class="blue_button" id="submit_signup"  type="submit" value="Sign up!" >
 						
 					</form>
@@ -68,15 +90,15 @@
 					<img src="img/login_here.png" id="login_img" /><br/>
 					<img src="img/dots.png" id="dots_img" />
 					<form id="login" action="./Login" method="POST" >
-						<input class="form_textbox" id="username_textbox" type="text" name="username" size="20" placeholder="Username"><br/>
-						<input class="form_textbox" id="password_textbox" type="password" name="password" size="20" placeholder="Password"><br/>
+						<input class="form_textbox" id="username_textbox" type="text" name="username" size="25" placeholder="Username"><br/>
+						<input class="form_textbox" id="password_textbox" type="password" name="password" size="25" placeholder="Password"><br/>
 						<input class="blue_button" id="submit_login" onclick="showLoading()" type="submit" value="Login" >
 						
 					</form>
 					<br/><br/>
 					<span id="signup_text">Don't have an account?<br/></span>
 					<!-- <button class="blue_button" type="submit" value="Register" >Sign up</button> -->
-					<img src="img/sign_up_direction.png" id="look_there"/>
+					<img src="img/signup_pointer.png" id="look_there"/>
 				</div>
 		<!-- LOGIN MARKUP -->
 				

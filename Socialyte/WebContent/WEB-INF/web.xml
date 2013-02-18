@@ -12,7 +12,7 @@
   </welcome-file-list>
   <servlet>
     <servlet-name>LoginController</servlet-name>
-    <servlet-class>sclyt.controller.LoginController</servlet-class>
+    <servlet-class>org.sclyt.controller.LoginController</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>LoginController</servlet-name>
@@ -20,7 +20,7 @@
   </servlet-mapping>
   <servlet>
     <servlet-name>HomeController</servlet-name>
-    <servlet-class>sclyt.controller.HomeController</servlet-class>
+    <servlet-class>org.sclyt.controller.HomeController</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>HomeController</servlet-name>
@@ -28,10 +28,18 @@
   </servlet-mapping>
   <servlet>
     <servlet-name>NewPostController</servlet-name>
-    <servlet-class>sclyt.controller.NewPostController</servlet-class>
+    <servlet-class>org.sclyt.controller.NewPostController</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>NewPostController</servlet-name>
     <url-pattern>/Post/new</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>SignupController</servlet-name>
+    <servlet-class>org.sclyt.controller.SignupController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SignupController</servlet-name>
+    <url-pattern>/Signup</url-pattern>
   </servlet-mapping>
 </web-app>

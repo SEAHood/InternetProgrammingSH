@@ -35,7 +35,8 @@ public class LoginController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		
+
+		attemptLogin(request, response);
 	}
 
 	/**
@@ -43,20 +44,28 @@ public class LoginController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		HttpSession session = request.getSession();
+
+		attemptLogin(request, response);
+		
+	}
+	
+	
+	private void attemptLogin(HttpServletRequest req, HttpServletResponse response) throws ServletException, IOException 
+	{
+		HttpSession session = req.getSession();
 		PrintWriter out = response.getWriter();
 		
-		if (request.getParameter("logout") != null)
+		if (req.getParameter("logout") != null)
 		{
 			session.removeAttribute("session");
 			
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/Home");
-			rd.forward(request, response);			
+			rd.forward(req, response);			
 		}
 		else
 		{
-			String username = request.getParameter("username");
-			String password = request.getParameter("password");
+			String username = req.getParameter("username");
+			String password = req.getParameter("password");
 			
 			//out.println(username + " :: " + password);
 			
@@ -72,20 +81,21 @@ public class LoginController extends HttpServlet {
 			if (success)
 			{
 				//out.println("LOGIN!");
-				Session thisSession = new Session();
-				thisSession.setUsername(username);
+				Session thisSession = login.createSession();
 				
 				session.setAttribute("session", thisSession);
 				
 				//out.println(session.getAttribute("username"));
 				RequestDispatcher rd = getServletContext().getRequestDispatcher("/Home");
-				rd.forward(request, response);
+				rd.forward(req, response);
 			}
 			else
-				out.println("NO LOGIN!");
+			{
+				req.setAttribute("invalid_login", true);
+				RequestDispatcher rd = getServletContext().getRequestDispatcher("/Home");
+				rd.forward(req, response);
+			}
 		}
-		
-		
 	}
 
 }

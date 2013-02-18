@@ -23,9 +23,10 @@ import me.prettyprint.hector.api.query.RangeSlicesQuery;
 
 public class DBConnection {
 	
-	ColumnFamilyTemplate<String, String> template;
+	ColumnFamilyTemplate<String, String> UsersTemplate;
+	ColumnFamilyTemplate<String, String> LoginTemplate;
 	ColumnFamilyTemplate<UUID, String> UUIDTemplate;
-	ColumnFamilyTemplate<Long, String> LongTemplate;
+	ColumnFamilyTemplate<Long, String> PostsTemplate;
 	Cluster cassCluster;
 	Keyspace cassKeyspace;
 	String _CF;
@@ -35,7 +36,7 @@ public class DBConnection {
 		
 	}
 	
-	public boolean connect(String columnFamily)
+	public boolean connect()
 	{		
 		try {
 			//INITIALISE CONNECTION
@@ -48,20 +49,26 @@ public class DBConnection {
 					
 		
 			//DEFINE TEMPLATE FOR COLUMNFAMILY
-			template =  new ThriftColumnFamilyTemplate<String, String>(cassKeyspace,
-	                                                               columnFamily,
+			UsersTemplate =  new ThriftColumnFamilyTemplate<String, String>(cassKeyspace,
+	                                                               "USERS",
+	                                                               StringSerializer.get(),
+	                                                               StringSerializer.get());	
+			
+			//DEFINE TEMPLATE FOR COLUMNFAMILY
+			LoginTemplate =  new ThriftColumnFamilyTemplate<String, String>(cassKeyspace,
+	                                                               "LOGIN",
 	                                                               StringSerializer.get(),
 	                                                               StringSerializer.get());	
 		
 			//DEFINE TEMPLATE FOR COLUMNFAMILY
-			UUIDTemplate =  new ThriftColumnFamilyTemplate<UUID, String>(cassKeyspace,
+			/*UUIDTemplate =  new ThriftColumnFamilyTemplate<UUID, String>(cassKeyspace,
 	                                                               columnFamily,
 	                                                               UUIDSerializer.get(),
-	                                                               StringSerializer.get());	
+	                                                               StringSerializer.get());	*/
 			
 			//DEFINE TEMPLATE FOR COLUMNFAMILY
-			LongTemplate =  new ThriftColumnFamilyTemplate<Long, String>(cassKeyspace,
-	                                                               columnFamily,
+			PostsTemplate =  new ThriftColumnFamilyTemplate<Long, String>(cassKeyspace,
+	                                                               "ALL_POSTS",
 	                                                               LongSerializer.get(),
 	                                                               StringSerializer.get());	
 		
@@ -69,9 +76,132 @@ public class DBConnection {
 		}
 		catch (HectorException e)
 		{
+			System.out.println("HectorException @ DBConnection.connect(): " + e.getMessage());
 			return false;
 		}
 	}
+	
+	
+	public String fetchAvatar(String username)
+	{
+		String avatar;
+		
+		ColumnFamilyResult<String, String> res = null;
+		boolean connected = false;
+		boolean err_found = false;
+		
+		
+		while (!connected)
+		{
+			err_found = false;
+			
+			try
+			{
+				res = UsersTemplate.queryColumns(username);
+			}
+			catch (HectorException e)
+			{
+				err_found = true;		
+			}
+			
+			if (!err_found)
+			{
+				connected = true;
+			}
+		}
+		
+		
+		avatar = res.getString("avatar");
+		
+		if (avatar == null)
+			avatar = "/Socialyte/img/profiles/default.png";
+		
+		return avatar;
+	}
+	
+	public String fetchFullName(String username)
+	{
+		String first_name;
+		String surname;
+		
+		ColumnFamilyResult<String, String> res = null;
+		boolean connected = false;
+		boolean err_found = false;
+		
+		
+		while (!connected)
+		{
+			err_found = false;
+			
+			try
+			{
+				res = UsersTemplate.queryColumns(username);
+			}
+			catch (HectorException e)
+			{
+				err_found = true;		
+			}
+			
+			if (!err_found)
+			{
+				connected = true;
+			}
+		}
+		
+		
+		first_name = res.getString("first_name");
+		surname = res.getString("surname");
+		
+		String full_name = first_name + " " + surname;
+		
+		if (full_name == null)
+			full_name = username;
+		
+		return full_name;
+	}
+	
+	
+	public boolean attemptLogin(String login_username, String login_password)
+	{
+		ColumnFamilyResult<String, String> res = null;
+		boolean connected = false;
+		boolean err_found = false;
+		
+		
+		while (!connected)
+		{
+			err_found = false;
+			
+			try
+			{
+				res = LoginTemplate.queryColumns(login_username);
+			}
+			catch (HectorException e)
+			{
+				err_found = true;		
+			}
+			
+			if (!err_found)
+			{
+				connected = true;
+			}
+		}
+		
+		
+		String value = res.getString("password");
+	    
+	    if (value != null)
+	    {
+		    if (value.equals(login_password))
+		    	return true;
+		    else
+		    	return false;
+	    }
+	    else
+	    	return false;
+	}
+	
+	
 	
 	public LinkedList<Row<Long, String, String>> queryPosts()
 	{		
@@ -112,25 +242,25 @@ public class DBConnection {
 		// UPDATE / CREATE CODE
 		// <String, String> correspond to key and Column name.
 		//ColumnFamilyUpdater<UUID, String> nameUpdater = UUIDTemplate.createUpdater(timeUUID);
-		ColumnFamilyUpdater<Long, String> nameUpdater = LongTemplate.createUpdater(timestamp);
+		ColumnFamilyUpdater<Long, String> nameUpdater = PostsTemplate.createUpdater(timestamp);
 		nameUpdater.setString("full_name", _full_name);
 		nameUpdater.setLong("time", System.currentTimeMillis());
 		
 		//ColumnFamilyUpdater<UUID, String> bodyUpdater = UUIDTemplate.createUpdater(timeUUID);
-		ColumnFamilyUpdater<Long, String> bodyUpdater = LongTemplate.createUpdater(timestamp);
+		ColumnFamilyUpdater<Long, String> bodyUpdater = PostsTemplate.createUpdater(timestamp);
 		bodyUpdater.setString("body", _body);
 		bodyUpdater.setLong("time", System.currentTimeMillis());
 		
 		//ColumnFamilyUpdater<UUID, String> tagsUpdater = UUIDTemplate.createUpdater(timeUUID);
-		ColumnFamilyUpdater<Long, String> tagsUpdater = LongTemplate.createUpdater(timestamp);
+		ColumnFamilyUpdater<Long, String> tagsUpdater = PostsTemplate.createUpdater(timestamp);
 		tagsUpdater.setString("tags", _tags);
 		tagsUpdater.setLong("time", System.currentTimeMillis());
 
 		
 		try {
-			LongTemplate.update(nameUpdater);
-			LongTemplate.update(bodyUpdater);
-			LongTemplate.update(tagsUpdater);		    
+			PostsTemplate.update(nameUpdater);
+			PostsTemplate.update(bodyUpdater);
+			PostsTemplate.update(tagsUpdater);		    
 		} catch (HectorException e) {
 			System.out.println(e.getMessage());
 		    return false;
@@ -138,6 +268,76 @@ public class DBConnection {
 		
 		return true;
 	}
+	
+	
+	public boolean createAccount(String _first_name, String _surname, String _username, String _password, String _email, String _avatar)
+	{
+		long timestamp = System.currentTimeMillis();
+		// UPDATE / CREATE CODE
+		// <String, String> correspond to key and Column name.
+		//ColumnFamilyUpdater<UUID, String> nameUpdater = UUIDTemplate.createUpdater(timeUUID);
+		ColumnFamilyUpdater<String, String> first_name = UsersTemplate.createUpdater(_username);
+		first_name.setString("first_name", _first_name);
+		first_name.setLong("time", System.currentTimeMillis());
+		
+		//ColumnFamilyUpdater<UUID, String> bodyUpdater = UUIDTemplate.createUpdater(timeUUID);
+		ColumnFamilyUpdater<String, String> surname = UsersTemplate.createUpdater(_username);
+		surname.setString("surname", _surname);
+		surname.setLong("time", System.currentTimeMillis());
+		
+		//ColumnFamilyUpdater<UUID, String> tagsUpdater = UUIDTemplate.createUpdater(timeUUID);
+		ColumnFamilyUpdater<String, String> email = UsersTemplate.createUpdater(_username);
+		email.setString("email", _email);
+		email.setLong("time", System.currentTimeMillis());
+		
+		//ColumnFamilyUpdater<UUID, String> tagsUpdater = UUIDTemplate.createUpdater(timeUUID);
+		ColumnFamilyUpdater<String, String> avatar = UsersTemplate.createUpdater(_username);
+		avatar.setString("avatar", _avatar);
+		avatar.setLong("time", System.currentTimeMillis());
+		
+		
+		
+		//ColumnFamilyUpdater<UUID, String> tagsUpdater = UUIDTemplate.createUpdater(timeUUID);
+		ColumnFamilyUpdater<String, String> password = LoginTemplate.createUpdater(_username);
+		password.setString("password", _password);
+		password.setLong("time", System.currentTimeMillis());
+
+		boolean connected = false;
+		boolean err_found = false;
+		
+		
+		
+		while (!connected)
+		{
+			err_found = false;
+			
+			try
+			{
+				UsersTemplate.update(first_name);
+				UsersTemplate.update(surname);
+				UsersTemplate.update(email);	
+				UsersTemplate.update(avatar);	
+				
+				LoginTemplate.update(password);
+			}
+			catch (HectorException e)
+			{
+				System.out.println(e.getMessage());
+				err_found = true;		
+			}
+			
+			if (!err_found)
+			{
+				connected = true;
+			}
+		}
+		
+		
+		return true;
+		
+	}
+	
+	
 	
 	private UUID generateTimeUUID()
 	{

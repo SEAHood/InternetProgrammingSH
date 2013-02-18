@@ -34,6 +34,9 @@ public class NewPostController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		HttpSession session = request.getSession();
+		Session thisSession = (Session)session.getAttribute("session");
+		request.setAttribute("Session", thisSession);
 		RequestDispatcher rd = getServletContext().getRequestDispatcher("/newpost.jsp");
 		rd.forward(request, response);
 	}
