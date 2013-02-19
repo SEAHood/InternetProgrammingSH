@@ -1,6 +1,7 @@
 package org.sclyt.controller;
 
 import java.io.IOException;
+import java.util.Date;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -36,7 +37,7 @@ public class NewPostController extends HttpServlet {
 		// TODO Auto-generated method stub
 		HttpSession session = request.getSession();
 		Session thisSession = (Session)session.getAttribute("session");
-		request.setAttribute("Session", thisSession);
+		request.setAttribute("session", thisSession);
 		RequestDispatcher rd = getServletContext().getRequestDispatcher("/newpost.jsp");
 		rd.forward(request, response);
 	}
@@ -55,6 +56,8 @@ public class NewPostController extends HttpServlet {
 		PostCreator creator = new PostCreator(full_name, body, tags);
 		if (creator.create())
 		{
+			Date date = new Date();
+			System.out.println("[" + date + "] " + full_name + " created post body {" + body + "}, tags{" + tags + "}" );
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/post_success.jsp");
 			rd.forward(request, response);
 		}

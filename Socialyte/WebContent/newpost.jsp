@@ -55,7 +55,7 @@
 			<div id="user_pane">
 					<div id="user_avatar">
 						<% 
-							Session thisSession = (Session)request.getAttribute("Session");
+							Session thisSession = (Session)request.getAttribute("session");
 							String avatar = thisSession.getAvatar();
 						%>
 						<img src="<%=avatar %>" />

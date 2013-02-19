@@ -1,8 +1,11 @@
 package org.sclyt.model;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.UUID;
+
+import org.sclyt.store.ProfileStore;
 
 import me.prettyprint.cassandra.serializers.LongSerializer;
 import me.prettyprint.cassandra.serializers.StringSerializer;
@@ -23,10 +26,10 @@ import me.prettyprint.hector.api.query.RangeSlicesQuery;
 
 public class DBConnection {
 	
-	ColumnFamilyTemplate<String, String> UsersTemplate;
+	ColumnFamilyTemplate<String, String> UserTemplate;
 	ColumnFamilyTemplate<String, String> LoginTemplate;
 	ColumnFamilyTemplate<UUID, String> UUIDTemplate;
-	ColumnFamilyTemplate<Long, String> PostsTemplate;
+	ColumnFamilyTemplate<Long, String> PostTemplate;
 	Cluster cassCluster;
 	Keyspace cassKeyspace;
 	String _CF;
@@ -49,8 +52,8 @@ public class DBConnection {
 					
 		
 			//DEFINE TEMPLATE FOR COLUMNFAMILY
-			UsersTemplate =  new ThriftColumnFamilyTemplate<String, String>(cassKeyspace,
-	                                                               "USERS",
+			UserTemplate =  new ThriftColumnFamilyTemplate<String, String>(cassKeyspace,
+	                                                               "USER",
 	                                                               StringSerializer.get(),
 	                                                               StringSerializer.get());	
 			
@@ -67,7 +70,7 @@ public class DBConnection {
 	                                                               StringSerializer.get());	*/
 			
 			//DEFINE TEMPLATE FOR COLUMNFAMILY
-			PostsTemplate =  new ThriftColumnFamilyTemplate<Long, String>(cassKeyspace,
+			PostTemplate =  new ThriftColumnFamilyTemplate<Long, String>(cassKeyspace,
 	                                                               "ALL_POSTS",
 	                                                               LongSerializer.get(),
 	                                                               StringSerializer.get());	
@@ -81,6 +84,41 @@ public class DBConnection {
 		}
 	}
 	
+	public boolean checkUsernameExists(String username)
+	{
+		String avatar;
+		ColumnFamilyResult<String, String> res = null;
+		boolean connected = false;
+		boolean err_found = false;
+		
+		
+		while (!connected)
+		{
+			err_found = false;
+			
+			try
+			{
+				res = LoginTemplate.queryColumns(username);
+			}
+			catch (HectorException e)
+			{
+				System.out.println(e.getMessage());
+				err_found = true;		
+			}
+			
+			if (!err_found)
+			{
+				connected = true;
+			}
+		}
+		
+		System.out.println(res.getString("password"));
+		
+		if (res.getString("password") != null)
+			return true;
+		else
+			return false;
+	}
 	
 	public String fetchAvatar(String username)
 	{
@@ -97,7 +135,7 @@ public class DBConnection {
 			
 			try
 			{
-				res = UsersTemplate.queryColumns(username);
+				res = UserTemplate.queryColumns(username);
 			}
 			catch (HectorException e)
 			{
@@ -135,7 +173,7 @@ public class DBConnection {
 			
 			try
 			{
-				res = UsersTemplate.queryColumns(username);
+				res = UserTemplate.queryColumns(username);
 			}
 			catch (HectorException e)
 			{
@@ -154,10 +192,67 @@ public class DBConnection {
 		
 		String full_name = first_name + " " + surname;
 		
-		if (full_name == null)
+		if (first_name == null || surname == null)
 			full_name = username;
 		
 		return full_name;
+	}
+	
+	
+	public ProfileStore fetchProfile(String username)
+	{
+		String first_name;
+		String surname;
+		Date dob;
+		String email;
+		String city;
+		String country;
+		String avatar;
+		
+		ProfileStore user_profile = new ProfileStore();
+		
+		ColumnFamilyResult<String, String> res = null;
+		boolean connected = false;
+		boolean err_found = false;
+				
+		while (!connected)
+		{
+			err_found = false;
+			
+			try
+			{
+				res = UserTemplate.queryColumns(username);
+			}
+			catch (HectorException e)
+			{
+				err_found = true;		
+			}
+			
+			if (!err_found)
+			{
+				connected = true;
+			}
+		}
+				
+		first_name = res.getString("first_name");
+		surname = res.getString("surname");
+		dob = res.getDate("dob");
+		email = res.getString("email");
+		city = res.getString("city");
+		country = res.getString("country");
+		avatar = res.getString("avatar");
+		
+		
+		user_profile.setUsername(username);
+		user_profile.setFirstName(first_name);
+		user_profile.setSurname(surname);
+		user_profile.setDOB(dob);
+		user_profile.setEmail(email);
+		user_profile.setCity(city);
+		user_profile.setCountry(country);
+		user_profile.setAvatar(avatar);
+		
+		return user_profile;
 	}
 	
 	
@@ -242,25 +337,25 @@ public class DBConnection {
 		// UPDATE / CREATE CODE
 		// <String, String> correspond to key and Column name.
 		//ColumnFamilyUpdater<UUID, String> nameUpdater = UUIDTemplate.createUpdater(timeUUID);
-		ColumnFamilyUpdater<Long, String> nameUpdater = PostsTemplate.createUpdater(timestamp);
+		ColumnFamilyUpdater<Long, String> nameUpdater = PostTemplate.createUpdater(timestamp);
 		nameUpdater.setString("full_name", _full_name);
 		nameUpdater.setLong("time", System.currentTimeMillis());
 		
 		//ColumnFamilyUpdater<UUID, String> bodyUpdater = UUIDTemplate.createUpdater(timeUUID);
-		ColumnFamilyUpdater<Long, String> bodyUpdater = PostsTemplate.createUpdater(timestamp);
+		ColumnFamilyUpdater<Long, String> bodyUpdater = PostTemplate.createUpdater(timestamp);
 		bodyUpdater.setString("body", _body);
 		bodyUpdater.setLong("time", System.currentTimeMillis());
 		
 		//ColumnFamilyUpdater<UUID, String> tagsUpdater = UUIDTemplate.createUpdater(timeUUID);
-		ColumnFamilyUpdater<Long, String> tagsUpdater = PostsTemplate.createUpdater(timestamp);
+		ColumnFamilyUpdater<Long, String> tagsUpdater = PostTemplate.createUpdater(timestamp);
 		tagsUpdater.setString("tags", _tags);
 		tagsUpdater.setLong("time", System.currentTimeMillis());
 
 		
 		try {
-			PostsTemplate.update(nameUpdater);
-			PostsTemplate.update(bodyUpdater);
-			PostsTemplate.update(tagsUpdater);		    
+			PostTemplate.update(nameUpdater);
+			PostTemplate.update(bodyUpdater);
+			PostTemplate.update(tagsUpdater);		    
 		} catch (HectorException e) {
 			System.out.println(e.getMessage());
 		    return false;
@@ -276,22 +371,22 @@ public class DBConnection {
 		// UPDATE / CREATE CODE
 		// <String, String> correspond to key and Column name.
 		//ColumnFamilyUpdater<UUID, String> nameUpdater = UUIDTemplate.createUpdater(timeUUID);
-		ColumnFamilyUpdater<String, String> first_name = UsersTemplate.createUpdater(_username);
+		ColumnFamilyUpdater<String, String> first_name = UserTemplate.createUpdater(_username);
 		first_name.setString("first_name", _first_name);
 		first_name.setLong("time", System.currentTimeMillis());
 		
 		//ColumnFamilyUpdater<UUID, String> bodyUpdater = UUIDTemplate.createUpdater(timeUUID);
-		ColumnFamilyUpdater<String, String> surname = UsersTemplate.createUpdater(_username);
+		ColumnFamilyUpdater<String, String> surname = UserTemplate.createUpdater(_username);
 		surname.setString("surname", _surname);
 		surname.setLong("time", System.currentTimeMillis());
 		
 		//ColumnFamilyUpdater<UUID, String> tagsUpdater = UUIDTemplate.createUpdater(timeUUID);
-		ColumnFamilyUpdater<String, String> email = UsersTemplate.createUpdater(_username);
+		ColumnFamilyUpdater<String, String> email = UserTemplate.createUpdater(_username);
 		email.setString("email", _email);
 		email.setLong("time", System.currentTimeMillis());
 		
 		//ColumnFamilyUpdater<UUID, String> tagsUpdater = UUIDTemplate.createUpdater(timeUUID);
-		ColumnFamilyUpdater<String, String> avatar = UsersTemplate.createUpdater(_username);
+		ColumnFamilyUpdater<String, String> avatar = UserTemplate.createUpdater(_username);
 		avatar.setString("avatar", _avatar);
 		avatar.setLong("time", System.currentTimeMillis());
 		
@@ -313,10 +408,10 @@ public class DBConnection {
 			
 			try
 			{
-				UsersTemplate.update(first_name);
-				UsersTemplate.update(surname);
-				UsersTemplate.update(email);	
-				UsersTemplate.update(avatar);	
+				UserTemplate.update(first_name);
+				UserTemplate.update(surname);
+				UserTemplate.update(email);	
+				UserTemplate.update(avatar);	
 				
 				LoginTemplate.update(password);
 			}

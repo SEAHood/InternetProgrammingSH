@@ -1,6 +1,7 @@
 package org.sclyt.controller;
 
 import java.io.IOException;
+import java.util.Date;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.sclyt.model.DataValidator;
 import org.sclyt.model.Signup;
 
 /**
@@ -47,18 +49,53 @@ public class SignupController extends HttpServlet {
 		
 		String default_avatar = "/Socialyte/img/profiles/default.png";
 		
-		Signup newAccount = new Signup(first_name, surname, new_username, new_password, email, default_avatar);
+		Signup newAccount = new Signup(first_name, surname, new_username, new_password, new_password_c, email, default_avatar);
+		DataValidator validator = new DataValidator(newAccount);
+		String validation_result = validator.validate();
 		
-		if (newAccount.execute())
+		/*
+		if (validation_result.contains("INV_FNAME,"))
+			//do dis
+		
+		if (validation_result.contains("INV_SNAME,"))
+			//do dis
+		
+		if (validation_result.contains("INV_USR,"))
+			//do dis
+		
+		if (validation_result.contains("INV_USR_EXISTS,"))
+			//do dis
+			
+		if (validation_result.contains("INV_EMAIL,"))
+			//do dis
+		
+		if (validation_result.contains("INV_PASS,"))
+			//do dis
+		*/		
+		System.out.println(validation_result);
+		if (validation_result != "")
 		{
-			System.out.println("newAccount.execute() succeeded - new account created.");
-			request.setAttribute("account_created", true);
+			request.setAttribute("validation_error", validation_result);
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/Home");
 			rd.forward(request, response);
 		}
 		else
 		{
-			System.out.println("newAccount.execute() failed.");
+			if (newAccount.execute())
+			{
+				Date date = new Date();
+				System.out.println("[" + date + "] New account created:" + first_name + "," + surname + "," + new_username + "," + new_password + "," + email);
+				request.setAttribute("account_created", true);
+				RequestDispatcher rd = getServletContext().getRequestDispatcher("/Home");
+				rd.forward(request, response);
+			}
+			else
+			{
+				System.out.println("newAccount.execute() failed.");
+				request.setAttribute("account_creation_issue", true);
+				RequestDispatcher rd = getServletContext().getRequestDispatcher("/Home");
+				rd.forward(request, response);
+			}
 		}
 		
 		//DO VALIDATION

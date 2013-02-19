@@ -42,4 +42,12 @@
     <servlet-name>SignupController</servlet-name>
     <url-pattern>/Signup</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>ProfileController</servlet-name>
+    <servlet-class>org.sclyt.controller.ProfileController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ProfileController</servlet-name>
+    <url-pattern>/Profile/</url-pattern>
+  </servlet-mapping>
 </web-app>

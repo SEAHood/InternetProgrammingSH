@@ -66,17 +66,16 @@ public class LoginController extends HttpServlet {
 		{
 			String username = req.getParameter("username");
 			String password = req.getParameter("password");
-			
-			//out.println(username + " :: " + password);
-			
-			Login login = new Login(username, password);
-			
-			//out.println(login.getUserPass());
-			
+			Login login = null;
 			boolean success = false;
-			
-			if (login.setup())
-				success = login.execute();
+						
+			if (username != "" && password != "")
+			{
+				login = new Login(username, password);
+							
+				if (login.setup())
+					success = login.execute();
+			}
 			
 			if (success)
 			{

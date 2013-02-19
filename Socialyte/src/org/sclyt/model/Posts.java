@@ -77,7 +77,8 @@ public class Posts {
 		}
 
 		//BIG SHITTY SORT////////////////////////////////////////////////////////////////////////////////////////////
-		System.out.println("Post sort started..");
+		Date date = new Date();
+		System.out.println("[" + date + "] Posts requested - sorting");
 		long[] sorted_dates = new long[post_count];
 		int countT = 0;
 		int count1 = 0;
@@ -139,9 +140,8 @@ public class Posts {
 			}
 		}
 		
-		System.out.println("Sorting posts completed: " + countT + " cycles done in total.");
-		System.out.println("While 1: " + count1 + " - While 2: " + count2 + " - While 3: " + count3);
-		System.out.println("Post sort ended..\n\n");
+		date = new Date();
+		System.out.println("[" + date + "] Sorting posts completed: " + countT + " cycles done in total.");
 		//END OF SHITTY SORT///////////////////////////////////////////////////////////////////////////////////////
 		
 		return sorted_list;

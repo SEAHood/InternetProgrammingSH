@@ -8,9 +8,9 @@
 <link rel="shortcut icon" href="img/favicon.ico" />
 <link rel="stylesheet" type="text/css" href="css/main_style.css">
 <link rel="stylesheet" type="text/css" href="css/login_style.css">
+
 <script type="text/JavaScript" src="js/scripts.js"></script> 
 <script src="http://code.jquery.com/jquery-latest.js"></script>
-
 </head>
 
 <body>
@@ -41,14 +41,50 @@
 			{ %>
 				<div class="message_popup">
 					<span id="green_text">Account created successfully!</span><br/>
-					You may now sign in below.
+					<span class="small_text">You may now sign in below.</span>
 				</div>
 			<% } 
 			else if (request.getAttribute("invalid_login") != null)
 			{ %>				
 				<div class="message_popup">
 					<span id="red_text">Invalid login details!</span><br/>
-					Please check and try again
+					<span class="small_text">Please check and try again</span>
+				</div>
+			<% } 
+			else if (request.getAttribute("validation_error") != null)
+			{ %>				
+				<div class="message_popup">
+					<span id="red_text">Account Creation Failed!</span><br/><span class="small_text">
+				<%
+					String validation_result = (String)request.getAttribute("validation_error");
+					System.out.println("JSP:" + validation_result);
+					String error_text;
+					
+					if (validation_result.contains("INV_FNAME,"))
+						%>Invalid first name<br/>
+					<%					
+					if (validation_result.contains("INV_SNAME,"))
+						%>Invalid surname<br/>
+						
+					<%	
+					if (validation_result.contains("INV_USR,"))
+						%>Invalid username<br/>
+					
+					<%	
+					if (validation_result.contains("INV_USR_EXISTS,"))
+						%>Username taken!<br/>
+						
+					<%	
+					if (validation_result.contains("INV_EMAIL,"))
+						%>Invalid email name<br/>
+						
+					<%	
+					if (validation_result.contains("INV_PASS,"))
+						%>Invalid password<br/>
+						
+					</span>	
+				
+				
 				</div>
 			<% } %>
 			<script>
@@ -65,19 +101,19 @@
 			
 				<div id="signup_pane">
 					<img src="img/sign_up.png" id="sign_up_img" />
-					<form id="login" action="./Signup" method="POST" >
-					<label>First name</label><br/>
-						<input class="form_textbox" id="first_name_textbox" type="text" name="first_name" size="25"><br/>
-					<label>Surname</label><br/>						
-						<input class="form_textbox" id="surname_textbox" type="text" name="surname"  size="25"><br/>
-					<label>Username (to sign in)</label><br/>
-						<input class="form_textbox" id="new_username_textbox" type="text" name="new_username" size="25"><br/>
-					<label>Password</label><br/>
-						<input class="form_textbox" id="new_password_textbox" type="password" name="new_password" size="25"><br/>
-					<label>Password (confirm)</label><br/>
-						<input class="form_textbox" id="new_password_confirm_textbox" type="password" name="new_password_c" size="25"><br/>
-					<label>Email address</label><br/>
-						<input class="form_textbox" id="email_textbox" type="text" name="email" size="25"><br/>
+					<form name="signup" id="signupForm" action="./Signup" method="POST" > <!-- ./Signup -->
+					<label for="first_name_tb">First name</label><br/>
+						<input class="form_textbox" id="first_name_tb" type="text" name="first_name" size="25"><br/>
+					<label for="surname_tb">Surname</label><br/>						
+						<input class="form_textbox" id="surname_tb" type="text" name="surname"  size="25"><br/>
+					<label for="new_username_tb">Username (to sign in)</label><br/>
+						<input class="form_textbox" id="new_username_tb" type="text" name="new_username" size="25"><br/>
+					<label for="new_password_tb">Password</label><br/>
+						<input class="form_textbox" id="new_password_tb" type="password" name="new_password" size="25"><br/>
+					<label for="new_password_confirm_tb">Password (confirm)</label><br/>
+						<input class="form_textbox" id="new_password_confirm_tb" type="password" name="new_password_c" size="25"><br/>
+					<label for="email_tb">Email address</label><br/>
+						<input class="form_textbox" id="email_tb" type="text" name="email" size="25"><br/>
 						<input class="blue_button" id="submit_signup"  type="submit" value="Sign up!" >
 						
 					</form>

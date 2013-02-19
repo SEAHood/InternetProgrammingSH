@@ -17,15 +17,17 @@ public class Signup {
 	String surname;
 	String username;
 	String password;
+	String password_c;
 	String email;
 	String avatar;
 	
-	public Signup(String _first_name, String _surname, String _username, String _password, String _email, String _avatar)
+	public Signup(String _first_name, String _surname, String _username, String _password, String _password_c, String _email, String _avatar)
 	{
 		first_name = _first_name;
 		surname = _surname;
 		username = _username;
 		password = _password;
+		password_c = _password_c;
 		email = _email;
 		avatar = _avatar;
 		
@@ -35,7 +37,6 @@ public class Signup {
 	{
 		DBConnection DBConn = new DBConnection();
 
-		System.out.println(first_name + surname + username + password + email + avatar);
 		if (DBConn.connect())
 		{
 			if (DBConn.createAccount(first_name, surname, username, password, email, avatar))
