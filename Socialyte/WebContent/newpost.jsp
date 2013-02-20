@@ -69,7 +69,7 @@
 						{info}
 					</div>
 					<div id="user_controls">
-						<form name="logout_form" method="POST" action="./Login">
+						<form name="logout_form" method="POST" action="/Socialyte/Login">
 							<input type="hidden" id="logout" name="logout">
 		        			<input class="blue_button" id="logout_button" type="submit" value="Logout" >
 	    				</form>

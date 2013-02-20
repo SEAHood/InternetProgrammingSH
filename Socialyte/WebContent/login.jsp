@@ -5,9 +5,9 @@
 <head>
 <title>Socialyte</title>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<link rel="shortcut icon" href="img/favicon.ico" />
-<link rel="stylesheet" type="text/css" href="css/main_style.css">
-<link rel="stylesheet" type="text/css" href="css/login_style.css">
+<link rel="shortcut icon" href="/Socialyte/img/favicon.ico" />
+<link rel="stylesheet" type="text/css" href="/Socialyte/css/main_style.css">
+<link rel="stylesheet" type="text/css" href="/Socialyte/css/login_style.css">
 
 <script type="text/JavaScript" src="js/scripts.js"></script> 
 <script src="http://code.jquery.com/jquery-latest.js"></script>
@@ -19,7 +19,7 @@
 		<div id="top_bar">
 			
 			<div id="logo_div">
-				<a href="/Socialyte/"><img src="img/logo.png" id="logo" /></a>
+				<a href="/Socialyte/"><img src="/Socialyte/img/logo.png" id="logo" /></a>
 			</div>
 			
 			<div id="menu_items">
@@ -93,15 +93,15 @@
 	  			});
 			</script>
 			<div id="loading_popup">
-					<img src="img/loader_white.gif" /><br/>
-					<img src="img/logging_in_black.png" />
+					<img src="/Socialyte/img/loader_white.gif" /><br/>
+					<img src="/Socialyte/img/logging_in_black.png" />
 			</div>
 			
 			<div id="login_signup_pane">
 			
 				<div id="signup_pane">
-					<img src="img/sign_up.png" id="sign_up_img" />
-					<form name="signup" id="signupForm" action="./Signup" method="POST" > <!-- ./Signup -->
+					<img src="/Socialyte/img/sign_up.png" id="sign_up_img" />
+					<form name="signup" id="signupForm" action="/Socialyte/Signup" method="POST" > <!-- ./Signup -->
 					<label for="first_name_tb">First name</label><br/>
 						<input class="form_textbox" id="first_name_tb" type="text" name="first_name" size="25"><br/>
 					<label for="surname_tb">Surname</label><br/>						
@@ -119,13 +119,13 @@
 					</form>
 				</div>
 				<div id="or_partition">
-					<img src="img/or.png">
+					<img src="/Socialyte/img/or.png">
 				</div>
 				
 				<div id="login_pane">
-					<img src="img/login_here.png" id="login_img" /><br/>
-					<img src="img/dots.png" id="dots_img" />
-					<form id="login" action="./Login" method="POST" >
+					<img src="/Socialyte/img/login_here.png" id="login_img" /><br/>
+					<img src="/Socialyte/img/dots.png" id="dots_img" />
+					<form id="login" action="/Socialyte/Login" method="POST" >
 						<input class="form_textbox" id="username_textbox" type="text" name="username" size="25" placeholder="Username"><br/>
 						<input class="form_textbox" id="password_textbox" type="password" name="password" size="25" placeholder="Password"><br/>
 						<input class="blue_button" id="submit_login" onclick="showLoading()" type="submit" value="Login" >
@@ -134,7 +134,7 @@
 					<br/><br/>
 					<span id="signup_text">Don't have an account?<br/></span>
 					<!-- <button class="blue_button" type="submit" value="Register" >Sign up</button> -->
-					<img src="img/signup_pointer.png" id="look_there"/>
+					<img src="/Socialyte/img/signup_pointer.png" id="look_there"/>
 				</div>
 		<!-- LOGIN MARKUP -->
 				
@@ -143,9 +143,7 @@
 		</div>
 			
 		<div id="footer">
-			<!--<img src="http://i.imgur.com/Op9dO.gif"/>
-			<p>Web sense, nigga!</p>
-			<p>Copyright &copy; Socialyte 2013</p>  -->
+			<p>Copyright &copy; Socialyte 2013</p>
 		</div>
 	</div>
 </body>

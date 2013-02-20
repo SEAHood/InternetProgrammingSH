@@ -13,9 +13,9 @@
 <link rel="stylesheet" type="text/css" href="/Socialyte/css/main_style.css">
 <link rel="stylesheet" type="text/css" href="/Socialyte/css/post_style.css">
 
-<link rel="stylesheet" type="text/css" href="css/tooltipster.css" />
+<link rel="stylesheet" type="text/css" href="/Socialyte/css/tooltipster.css" />
 <script src="http://code.jquery.com/jquery-latest.js"></script>
-<script type="text/javascript" src="js/jquery.tooltipster.min.js"></script>
+<script type="text/javascript" src="/Socialyte/js/jquery.tooltipster.min.js"></script>
 <script>
 	$(document).ready(function() {
 	    $('.tooltip').tooltipster();
@@ -38,11 +38,11 @@
 			%>
 			
 			<div id="menu_items">
-				<a href="/Socialyte/Home" class="tooltip" title="Home"><img src="img/home_US.png" id="home" onmouseover="this.src='img/home_S.png'" onmouseout="this.src='img/home_US.png'"/></a>
-				<a href="/Socialyte/Profile/?username=<%=username %>" class="tooltip" title="My Profile"><img src="img/profile_US.png" id="profile" onmouseover="this.src='img/profile_S.png'" onmouseout="this.src='img/profile_US.png'"/></a>
-				<a href="/Socialyte/Post/new" class="tooltip" title="New Post"><img src="img/newpost_US.png" id="new_post" onmouseover="this.src='img/newpost_S.png'" onmouseout="this.src='img/newpost_US.png'"/></a>
-				<a href="/Socialyte/Subscribers" class="tooltip" title="Subscribers"><img src="img/subscribers_US.png"  id="subscribers" onmouseover="this.src='img/subscribers_S.png'" onmouseout="this.src='img/subscribers_US.png'"/></a>
-				<a href="/Socialyte/Subscriptions" class="tooltip" title="Subscriptions"><img src="img/subscriptions_US.png"  id="subscriptions" onmouseover="this.src='img/subscriptions_S.png'" onmouseout="this.src='img/subscriptions_US.png'"/></a>
+				<a href="/Socialyte/Home" class="tooltip" title="Home"><img src="/Socialyte/img/home_US.png" id="home" onmouseover="this.src='/Socialyte/img/home_S.png'" onmouseout="this.src='/Socialyte/img/home_US.png'"/></a>
+				<a href="/Socialyte/Profile/?username=<%=username %>" class="tooltip" title="My Profile"><img src="/Socialyte/img/profile_US.png" id="profile" onmouseover="this.src='/Socialyte/img/profile_S.png'" onmouseout="this.src='/Socialyte/img/profile_US.png'"/></a>
+				<a href="/Socialyte/Post/new" class="tooltip" title="New Post"><img src="/Socialyte/img/newpost_US.png" id="new_post" onmouseover="this.src='/Socialyte/img/newpost_S.png'" onmouseout="this.src='/Socialyte/img/newpost_US.png'"/></a>
+				<a href="/Socialyte/Subscribers" class="tooltip" title="Subscribers"><img src="/Socialyte/img/subscribers_US.png"  id="subscribers" onmouseover="this.src='/Socialyte/img/subscribers_S.png'" onmouseout="this.src='/Socialyte/img/subscribers_US.png'"/></a>
+				<a href="/Socialyte/Subscriptions" class="tooltip" title="Subscriptions"><img src="/Socialyte/img/subscriptions_US.png"  id="subscriptions" onmouseover="this.src='/Socialyte/img/subscriptions_S.png'" onmouseout="this.src='/Socialyte/img/subscriptions_US.png'"/></a>
 			</div>
 			
 			<div id="search_div">
@@ -58,13 +58,13 @@
 				<div id="user_pane">
 					<div id="user_avatar">
 						<% 
-							String avatar = thisSession.getAvatar();
+							String user_avatar = thisSession.getAvatar();
 						%>
-						<img src="<%=avatar %>" />
+						<img src="<%=user_avatar %>" />
 					</div>
 					<div id="user_info">
 						<% 
-							String session_full_name = thisSession.getFullName();	
+							String session_full_name = thisSession.getFullName();
 						%>
 						<strong><%=session_full_name %></strong><br/>
 						{post count}<br/>
@@ -105,7 +105,7 @@
 						<div class="post">
 							<div class="post_left">
 								<div class="post_avatar">
-									<img src="<%=avatar %>" />
+									<img src="<%=user_avatar %>" />
 								</div>
 							</div>
 						<%

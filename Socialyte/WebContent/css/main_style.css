@@ -90,6 +90,10 @@ html, body {
 	background-size:100% 100%; 
 }
 	
+.huge_text {
+	font-size:xx-large;
+	color:#1c94fb;	
+}
 
 .big_text {
 	font-size:large;

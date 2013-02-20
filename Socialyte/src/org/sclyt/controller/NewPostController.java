@@ -36,10 +36,18 @@ public class NewPostController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		HttpSession session = request.getSession();
-		Session thisSession = (Session)session.getAttribute("session");
-		request.setAttribute("session", thisSession);
-		RequestDispatcher rd = getServletContext().getRequestDispatcher("/newpost.jsp");
-		rd.forward(request, response);
+		if ((Session)session.getAttribute("session") != null)
+		{
+			Session thisSession = (Session)session.getAttribute("session");
+			request.setAttribute("session", thisSession);
+			RequestDispatcher rd = getServletContext().getRequestDispatcher("/newpost.jsp");
+			rd.forward(request, response);
+		}
+		else
+		{
+			RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.jsp");
+			rd.forward(request, response);
+		}
 	}
 
 	/**
@@ -48,23 +56,31 @@ public class NewPostController extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		HttpSession session = request.getSession();
-		Session thisSession = (Session)session.getAttribute("session");
-		String username = thisSession.getUsername();
-		String full_name = thisSession.getFullName();
-		String body = request.getParameter("body");
-		String tags = request.getParameter("tags");
-		
-		PostCreator creator = new PostCreator(username, full_name, body, tags);
-		if (creator.create())
+		if ((Session)session.getAttribute("session") != null)
 		{
-			Date date = new Date();
-			System.out.println("[" + date + "] " + full_name + " created post body {" + body + "}, tags{" + tags + "}" );
-			RequestDispatcher rd = getServletContext().getRequestDispatcher("/post_success.jsp");
-			rd.forward(request, response);
+			Session thisSession = (Session)session.getAttribute("session");
+			String username = thisSession.getUsername();
+			String full_name = thisSession.getFullName();
+			String body = request.getParameter("body");
+			String tags = request.getParameter("tags");
+			
+			PostCreator creator = new PostCreator(username, full_name, body, tags);
+			if (creator.create())
+			{
+				Date date = new Date();
+				System.out.println("[" + date + "] " + full_name + " created post body {" + body + "}, tags{" + tags + "}" );
+				RequestDispatcher rd = getServletContext().getRequestDispatcher("/post_success.jsp");
+				rd.forward(request, response);
+			}
+			else
+			{
+				RequestDispatcher rd = getServletContext().getRequestDispatcher("/post_fail.jsp");
+				rd.forward(request, response);
+			}
 		}
 		else
 		{
-			RequestDispatcher rd = getServletContext().getRequestDispatcher("/post_fail.jsp");
+			RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.jsp");
 			rd.forward(request, response);
 		}
 		

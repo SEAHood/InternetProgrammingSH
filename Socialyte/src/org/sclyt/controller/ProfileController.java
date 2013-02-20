@@ -8,9 +8,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.sclyt.model.ProfileConnector;
 import org.sclyt.store.ProfileStore;
+import org.sclyt.store.Session;
 
 /**
  * Servlet implementation class ProfileController
@@ -32,11 +34,15 @@ public class ProfileController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		ProfileStore profile = null;
-		String username = request.getParameter("username");
+		HttpSession session = request.getSession();
 		
-		if (username != null)
+		if ((Session)session.getAttribute("session") != null)
 		{
+			Session thisSession = (Session)session.getAttribute("session");
+			request.setAttribute("session", thisSession);
+			ProfileStore profile = null;
+			String username = request.getParameter("username");
+		
 			ProfileConnector connector = new ProfileConnector(username);
 			
 			if (connector.setup())
@@ -47,11 +53,11 @@ public class ProfileController extends HttpServlet {
 				RequestDispatcher rd = getServletContext().getRequestDispatcher("/profile.jsp");
 				rd.forward(request, response);
 			}
-			
 		}
 		else
 		{
-		
+			RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.jsp");
+			rd.forward(request, response);
 		}
 	}
 
