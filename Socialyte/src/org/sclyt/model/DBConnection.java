@@ -1,10 +1,12 @@
 package org.sclyt.model;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.UUID;
 
+import org.sclyt.store.PostStore;
 import org.sclyt.store.ProfileStore;
 
 import me.prettyprint.cassandra.serializers.LongSerializer;
@@ -28,7 +30,10 @@ public class DBConnection {
 	
 	ColumnFamilyTemplate<String, String> UserTemplate;
 	ColumnFamilyTemplate<String, String> LoginTemplate;
+	ColumnFamilyTemplate<String, String> SubscribedToByTemplate;
+	ColumnFamilyTemplate<String, String> SubscribesToTemplate;
 	ColumnFamilyTemplate<UUID, String> UUIDTemplate;
+	ColumnFamilyTemplate<String, Long> UserPostTemplate;
 	ColumnFamilyTemplate<Long, String> PostTemplate;
 	Cluster cassCluster;
 	Keyspace cassKeyspace;
@@ -41,52 +46,83 @@ public class DBConnection {
 	
 	public boolean connect()
 	{		
-		try {
-			//INITIALISE CONNECTION
-			
-			
-			
-			cassCluster = HFactory.getOrCreateCluster("Test Cluster","77.99.214.115:9160");
-			
-			cassKeyspace = HFactory.createKeyspace("TESTSPACE", cassCluster);
-					
-		
-			//DEFINE TEMPLATE FOR COLUMNFAMILY
-			UserTemplate =  new ThriftColumnFamilyTemplate<String, String>(cassKeyspace,
-	                                                               "USER",
-	                                                               StringSerializer.get(),
-	                                                               StringSerializer.get());	
-			
-			//DEFINE TEMPLATE FOR COLUMNFAMILY
-			LoginTemplate =  new ThriftColumnFamilyTemplate<String, String>(cassKeyspace,
-	                                                               "LOGIN",
-	                                                               StringSerializer.get(),
-	                                                               StringSerializer.get());	
-		
-			//DEFINE TEMPLATE FOR COLUMNFAMILY
-			/*UUIDTemplate =  new ThriftColumnFamilyTemplate<UUID, String>(cassKeyspace,
-	                                                               columnFamily,
-	                                                               UUIDSerializer.get(),
-	                                                               StringSerializer.get());	*/
-			
-			//DEFINE TEMPLATE FOR COLUMNFAMILY
-			PostTemplate =  new ThriftColumnFamilyTemplate<Long, String>(cassKeyspace,
-	                                                               "ALL_POSTS",
-	                                                               LongSerializer.get(),
-	                                                               StringSerializer.get());	
-		
-			return true;
-		}
-		catch (HectorException e)
+		boolean connected = false;
+		boolean err_found = false;
+	
+	
+		while (!connected)
 		{
-			System.out.println("HectorException @ DBConnection.connect(): " + e.getMessage());
-			return false;
+			try 
+			{
+				//INITIALISE CONNECTION
+				
+				
+				
+				cassCluster = HFactory.getOrCreateCluster("Test Cluster","77.99.214.115:9160");
+				
+				cassKeyspace = HFactory.createKeyspace("TESTSPACE", cassCluster);
+						
+			
+				//DEFINE TEMPLATE FOR COLUMNFAMILY
+				UserTemplate =  new ThriftColumnFamilyTemplate<String, String>(cassKeyspace,
+		                                                               "USER",
+		                                                               StringSerializer.get(),
+		                                                               StringSerializer.get());	
+				
+				//DEFINE TEMPLATE FOR COLUMNFAMILY
+				LoginTemplate =  new ThriftColumnFamilyTemplate<String, String>(cassKeyspace,
+		                                                               "LOGIN",
+		                                                               StringSerializer.get(),
+		                                                               StringSerializer.get());	
+				
+				//DEFINE TEMPLATE FOR COLUMNFAMILY
+				SubscribedToByTemplate =  new ThriftColumnFamilyTemplate<String, String>(cassKeyspace,
+		                                                               "SUBSCRIBED_TO_BY",
+		                                                               StringSerializer.get(),
+		                                                               StringSerializer.get());	
+				
+				//DEFINE TEMPLATE FOR COLUMNFAMILY
+				SubscribesToTemplate =  new ThriftColumnFamilyTemplate<String, String>(cassKeyspace,
+		                                                               "SUBSCRIBES_TO",
+		                                                               StringSerializer.get(),
+		                                                               StringSerializer.get());	
+				
+				//DEFINE TEMPLATE FOR COLUMNFAMILY
+				UserPostTemplate =  new ThriftColumnFamilyTemplate<String, Long>(cassKeyspace,
+		                                                               "REVERSE_TEST",
+		                                                               StringSerializer.get(),
+		                                                               LongSerializer.get());	
+			
+				//DEFINE TEMPLATE FOR COLUMNFAMILY
+				/*UUIDTemplate =  new ThriftColumnFamilyTemplate<UUID, String>(cassKeyspace,
+		                                                               columnFamily,
+		                                                               UUIDSerializer.get(),
+		                                                               StringSerializer.get());	*/
+				
+				//DEFINE TEMPLATE FOR COLUMNFAMILY
+				PostTemplate =  new ThriftColumnFamilyTemplate<Long, String>(cassKeyspace,
+		                                                               "ALL_POSTS",
+		                                                               LongSerializer.get(),
+		                                                               StringSerializer.get());	
+			
+				return true;
+			}
+			catch (HectorException e)
+			{
+				System.out.println("HectorException @ DBConnection.connect(): " + e.getMessage());
+				err_found = true;		
+			}
+			
+			if (!err_found)
+			{
+				connected = true;
+			}
 		}
+		return false;
 	}
 	
 	public boolean checkUsernameExists(String username)
 	{
-		String avatar;
 		ColumnFamilyResult<String, String> res = null;
 		boolean connected = false;
 		boolean err_found = false;
@@ -296,8 +332,7 @@ public class DBConnection {
 	    	return false;
 	}
 	
-	
-	
+		
 	public LinkedList<Row<Long, String, String>> queryPosts()
 	{		
 		LinkedList<Row<Long, String, String>> llist = new LinkedList<Row<Long, String, String>>();
@@ -330,7 +365,127 @@ public class DBConnection {
 	    return llist;
 	}
 	
-	public boolean createPost(String _full_name, String _body, String _tags)
+	
+	public LinkedList<ColumnFamilyResult<Long, String>> querySubscriptionPosts(String _username) //LinkedList<Row<Long, String, String>>
+	{		
+		LinkedList<ColumnFamilyResult<Long, String>> all_sub_posts = new LinkedList<ColumnFamilyResult<Long, String>>();
+		
+		//Find user's subscriptions
+		ColumnFamilyResult<String, String> res = null;
+		boolean connected = false;
+		boolean err_found = false;
+		
+		
+		while (!connected)
+		{
+			err_found = false;
+			
+			try
+			{
+				res = SubscribesToTemplate.queryColumns(_username);
+			}
+			catch (HectorException e)
+			{
+				System.out.println(e.getMessage());
+				err_found = true;		
+			}
+			
+			if (!err_found)
+			{
+				connected = true;
+			}
+		}
+		
+		Collection<String> subscriptions = res.getColumnNames();
+		for (Iterator<String> iterator = subscriptions.iterator(); iterator.hasNext();)
+		{
+			String sub_username = (String)iterator.next();
+			
+			ColumnFamilyResult<String, Long> sub_post_list = null;
+			
+			boolean conn = false;
+			boolean err = false;
+						
+			while (!conn)
+			{
+				err = false;
+				
+				try
+				{
+					sub_post_list = UserPostTemplate.queryColumns(sub_username);
+				}
+				catch (HectorException e)
+				{
+					System.out.println(e.getMessage());
+					err = true;		
+				}
+				
+				if (!err)
+				{
+					conn = true;
+				}
+			}
+			
+			Collection<Long> sub_post_ids = sub_post_list.getColumnNames();
+			
+			for (Iterator<Long> post_iterator = sub_post_ids.iterator(); post_iterator.hasNext();)
+			{
+				
+				Long post_id = post_iterator.next();
+				ColumnFamilyResult<Long, String> sub_post = null;
+				sub_post = PostTemplate.queryColumns(post_id);
+				
+				
+	            System.out.println(sub_post.toString());
+	        	all_sub_posts.add(sub_post);
+			}
+		}
+	    return all_sub_posts;
+	}
+	
+	
+	public LinkedList<ProfileStore> getSubscriptions(String _username)
+	{
+		LinkedList<ProfileStore> subscription_profiles = new LinkedList<ProfileStore>();
+		ColumnFamilyResult<String, String> res = null;
+		boolean connected = false;
+		boolean err_found = false;
+		
+		while (!connected)
+		{
+			err_found = false;
+			
+			try
+			{
+				res = SubscribesToTemplate.queryColumns(_username);
+			}
+			catch (HectorException e)
+			{
+				System.out.println(e.getMessage());
+				err_found = true;		
+			}
+			
+			if (!err_found)
+			{
+				connected = true;
+			}
+		}
+		
+		Collection<String> subscriptions = res.getColumnNames();
+		for (Iterator<String> iterator = subscriptions.iterator(); iterator.hasNext();)
+		{
+			String subscription_username = iterator.next();
+			System.out.println(subscription_username);
+			ProfileStore profile = fetchProfile(subscription_username);
+			subscription_profiles.add(profile);
+			System.out.println(profile.getFirstName());
+		}
+		
+		return subscription_profiles;
+	}
+	
+	
+	public boolean createPost(String _username, String _full_name, String _body, String _tags)
 	{
 		UUID timeUUID = generateTimeUUID();
 		long timestamp = System.currentTimeMillis();
@@ -350,12 +505,17 @@ public class DBConnection {
 		ColumnFamilyUpdater<Long, String> tagsUpdater = PostTemplate.createUpdater(timestamp);
 		tagsUpdater.setString("tags", _tags);
 		tagsUpdater.setLong("time", System.currentTimeMillis());
+		
+		
+		ColumnFamilyUpdater<String, Long> userPostUpdater = UserPostTemplate.createUpdater(_username);
+		userPostUpdater.setString(timestamp, "test");
 
 		
 		try {
 			PostTemplate.update(nameUpdater);
 			PostTemplate.update(bodyUpdater);
-			PostTemplate.update(tagsUpdater);		    
+			PostTemplate.update(tagsUpdater);	
+			UserPostTemplate.update(userPostUpdater);
 		} catch (HectorException e) {
 			System.out.println(e.getMessage());
 		    return false;
@@ -432,8 +592,7 @@ public class DBConnection {
 		
 	}
 	
-	
-	
+		
 	private UUID generateTimeUUID()
 	{
 		UUID timeUUID = TimeUUIDUtils.getUniqueTimeUUIDinMillis();

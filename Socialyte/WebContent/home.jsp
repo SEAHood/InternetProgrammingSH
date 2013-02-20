@@ -33,7 +33,7 @@
 			</div>
 			
 			<%
-				Session thisSession = (Session)request.getAttribute("Session");
+				Session thisSession = (Session)request.getAttribute("session");
 				String username = thisSession.getUsername();
 			%>
 			
@@ -41,8 +41,8 @@
 				<a href="/Socialyte/Home" class="tooltip" title="Home"><img src="img/home_US.png" id="home" onmouseover="this.src='img/home_S.png'" onmouseout="this.src='img/home_US.png'"/></a>
 				<a href="/Socialyte/Profile/?username=<%=username %>" class="tooltip" title="My Profile"><img src="img/profile_US.png" id="profile" onmouseover="this.src='img/profile_S.png'" onmouseout="this.src='img/profile_US.png'"/></a>
 				<a href="/Socialyte/Post/new" class="tooltip" title="New Post"><img src="img/newpost_US.png" id="new_post" onmouseover="this.src='img/newpost_S.png'" onmouseout="this.src='img/newpost_US.png'"/></a>
-				<a href="#" class="tooltip" title="Subscriptions"><img src="img/subscriptions_US.png"  id="subscriptions" onmouseover="this.src='img/subscriptions_S.png'" onmouseout="this.src='img/subscriptions_US.png'"/></a>
-				
+				<a href="/Socialyte/Subscribers" class="tooltip" title="Subscribers"><img src="img/subscribers_US.png"  id="subscribers" onmouseover="this.src='img/subscribers_S.png'" onmouseout="this.src='img/subscribers_US.png'"/></a>
+				<a href="/Socialyte/Subscriptions" class="tooltip" title="Subscriptions"><img src="img/subscriptions_US.png"  id="subscriptions" onmouseover="this.src='img/subscriptions_S.png'" onmouseout="this.src='img/subscriptions_US.png'"/></a>
 			</div>
 			
 			<div id="search_div">
@@ -82,10 +82,24 @@
 				<div id="post_pane">
 					
 					<%
-					List<PostStore> posts = (List<PostStore>)request.getAttribute("Posts");
+					List<PostStore> posts = (List<PostStore>)request.getAttribute("posts");
 					Iterator<PostStore> iterator;
 					
 					iterator = posts.iterator();
+					
+					if (!iterator.hasNext()) //No subscription posts found
+					{ %>
+						<div class="post">
+							<div id="post_error">
+								<span class="red_text">No Posts Found!</span><br/>
+								Have you subscribed to anyone yet?<br/>
+								<a href="/Socialyte/Subscriptions"><button class="blue_button" id="do_it_here_button">Do it here!</button></a>
+							</div>
+						</div>
+						
+					<% }
+					
+					
 					while (iterator.hasNext())
 					{ %>
 						<div class="post">

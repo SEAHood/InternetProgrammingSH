@@ -22,6 +22,10 @@
 	padding:10px;
 }
 
+#post_error {
+	text-align:center;
+}
+
 .post_left {
 	float:left; 
 	overflow:auto;
@@ -66,4 +70,8 @@
 	font-size:small;
 	color:#808080;
 	float:right;
+}
+
+#do_it_here_button {
+	margin:5px;
 }

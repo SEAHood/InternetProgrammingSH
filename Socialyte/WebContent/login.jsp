@@ -40,14 +40,14 @@
 			if (request.getAttribute("account_created") != null)
 			{ %>
 				<div class="message_popup">
-					<span id="green_text">Account created successfully!</span><br/>
+					<span class="green_text">Account created successfully!</span><br/>
 					<span class="small_text">You may now sign in below.</span>
 				</div>
 			<% } 
 			else if (request.getAttribute("invalid_login") != null)
 			{ %>				
 				<div class="message_popup">
-					<span id="red_text">Invalid login details!</span><br/>
+					<span class="red_text">Invalid login details!</span><br/>
 					<span class="small_text">Please check and try again</span>
 				</div>
 			<% } 

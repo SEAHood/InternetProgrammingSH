@@ -49,11 +49,12 @@ public class NewPostController extends HttpServlet {
 		// TODO Auto-generated method stub
 		HttpSession session = request.getSession();
 		Session thisSession = (Session)session.getAttribute("session");
-		String full_name = thisSession.getUsername();
+		String username = thisSession.getUsername();
+		String full_name = thisSession.getFullName();
 		String body = request.getParameter("body");
 		String tags = request.getParameter("tags");
 		
-		PostCreator creator = new PostCreator(full_name, body, tags);
+		PostCreator creator = new PostCreator(username, full_name, body, tags);
 		if (creator.create())
 		{
 			Date date = new Date();

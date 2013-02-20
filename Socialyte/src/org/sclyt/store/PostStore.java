@@ -9,6 +9,7 @@ public class PostStore {
 	String post_tags;
 	String post_body;
 	Date post_date;
+	Long post_id;
 	
 	
 	String rowcontents;
@@ -32,6 +33,7 @@ public class PostStore {
 	public void setDate(Date _date)
 	{
 		post_date = _date;
+		post_id = _date.getTime();
 	}
 	
 	
@@ -62,7 +64,8 @@ public class PostStore {
 		//String str_date;
 		
 		//str_date = post_date.toString();
-		
+
+		System.out.println("PostStore date: " + post_date.toString());
 		SimpleDateFormat s = new SimpleDateFormat("HH:mm dd/MM/yy");
 		String str_date = s.format(post_date);
 		
@@ -73,6 +76,8 @@ public class PostStore {
 	{
 		return post_date.getTime();
 	}
+	
+	
 	
 	public void setRowContents(String newContents)
 	{
