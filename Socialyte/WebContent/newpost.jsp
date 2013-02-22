@@ -31,15 +31,17 @@
 				<a href="/Socialyte/"><img src="/Socialyte/img/logo.png" id="logo" /></a>
 			</div>
 			
+			<%
+				Session thisSession = (Session)request.getAttribute("session");
+				String username = thisSession.getUsername();
+			%>
+			
 			<div id="menu_items">
 				<a href="/Socialyte/Home" class="tooltip" title="Home"><img src="/Socialyte/img/home_US.png" id="home" onmouseover="this.src='/Socialyte/img/home_S.png'" onmouseout="this.src='/Socialyte/img/home_US.png'"/></a>
-				
-				<a href="#" class="tooltip" title="My Profile"><img src="/Socialyte/img/profile_US.png" id="profile" onmouseover="this.src='/Socialyte/img/profile_S.png'" onmouseout="this.src='/Socialyte/img/profile_US.png'"/></a>
-				
-				<a href="/Socialyte/Post/new" class="tooltip" title="New Post"><img src="/Socialyte/img/newpost_US.png" id="add_post" onmouseover="this.src='/Socialyte/img/newpost_S.png'" onmouseout="this.src='/Socialyte/img/newpost_US.png'"/></a>
-				
-				<a href="#" class="tooltip" title="Subscriptions"><img src="/Socialyte/img/subscriptions_US.png"  id="subscriptions" onmouseover="this.src='/Socialyte/img/subscriptions_S.png'" onmouseout="this.src='/Socialyte/img/subscriptions_US.png'"/></a>
-				
+				<a href="/Socialyte/Profile/<%=username %>" class="tooltip" title="My Profile"><img src="/Socialyte/img/profile_US.png" id="profile" onmouseover="this.src='/Socialyte/img/profile_S.png'" onmouseout="this.src='/Socialyte/img/profile_US.png'"/></a>
+				<a href="/Socialyte/Post/new" class="tooltip" title="New Post"><img src="/Socialyte/img/newpost_US.png" id="new_post" onmouseover="this.src='/Socialyte/img/newpost_S.png'" onmouseout="this.src='/Socialyte/img/newpost_US.png'"/></a>
+				<a href="/Socialyte/Subscribers" class="tooltip" title="Subscribers"><img src="/Socialyte/img/subscribers_US.png"  id="subscribers" onmouseover="this.src='/Socialyte/img/subscribers_S.png'" onmouseout="this.src='/Socialyte/img/subscribers_US.png'"/></a>
+				<a href="/Socialyte/Subscriptions" class="tooltip" title="Subscriptions"><img src="/Socialyte/img/subscriptions_US.png"  id="subscriptions" onmouseover="this.src='/Socialyte/img/subscriptions_S.png'" onmouseout="this.src='/Socialyte/img/subscriptions_US.png'"/></a>
 			</div>
 			
 			<div id="search_div">
@@ -55,7 +57,6 @@
 			<div id="user_pane">
 					<div id="user_avatar">
 						<% 
-							Session thisSession = (Session)request.getAttribute("session");
 							String avatar = thisSession.getAvatar();
 						%>
 						<img src="<%=avatar %>" />
@@ -79,7 +80,7 @@
 
 			<div id="new_post_pane">
 				
-				<div id="new_post">
+				<div id="new_post_controls">
 					<div class="big_text">Say..</div>
 					<form name="new_post_form" method="POST" action="#">
 						<textarea id="body_text" name="body" rows="5" cols="30"></textarea><br/>

@@ -36,12 +36,16 @@ public class ProfileController extends HttpServlet {
 		// TODO Auto-generated method stub
 		HttpSession session = request.getSession();
 		
+		
 		if ((Session)session.getAttribute("session") != null)
 		{
 			Session thisSession = (Session)session.getAttribute("session");
 			request.setAttribute("session", thisSession);
 			ProfileStore profile = null;
-			String username = request.getParameter("username");
+			String username = request.getPathInfo();
+			username = username.replace("/", "");
+			System.out.println(username);
+			//String username = request.getParameter("username");
 		
 			ProfileConnector connector = new ProfileConnector(username);
 			

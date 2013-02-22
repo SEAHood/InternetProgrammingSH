@@ -156,6 +156,7 @@ public class DBConnection {
 			return false;
 	}
 	
+	
 	public String fetchAvatar(String username)
 	{
 		String avatar;
@@ -192,6 +193,7 @@ public class DBConnection {
 		
 		return avatar;
 	}
+	
 	
 	public String fetchFullName(String username)
 	{
@@ -233,7 +235,7 @@ public class DBConnection {
 		
 		return full_name;
 	}
-	
+		
 	
 	public ProfileStore fetchProfile(String username)
 	{
@@ -485,6 +487,47 @@ public class DBConnection {
 	}
 	
 	
+	public LinkedList<ProfileStore> getSubscribers(String _username)
+	{
+		LinkedList<ProfileStore> subscriber_profiles = new LinkedList<ProfileStore>();
+		ColumnFamilyResult<String, String> res = null;
+		boolean connected = false;
+		boolean err_found = false;
+		
+		while (!connected)
+		{
+			err_found = false;
+			
+			try
+			{
+				res = SubscribedToByTemplate.queryColumns(_username);
+			}
+			catch (HectorException e)
+			{
+				System.out.println(e.getMessage());
+				err_found = true;		
+			}
+			
+			if (!err_found)
+			{
+				connected = true;
+			}
+		}
+		
+		Collection<String> subscribers = res.getColumnNames();
+		for (Iterator<String> iterator = subscribers.iterator(); iterator.hasNext();)
+		{
+			String subscriber_username = iterator.next();
+			System.out.println(subscriber_username);
+			ProfileStore profile = fetchProfile(subscriber_username);
+			subscriber_profiles.add(profile);
+			System.out.println(profile.getFirstName());
+		}
+		
+		return subscriber_profiles;
+	}
+	
+	
 	public boolean createPost(String _username, String _full_name, String _body, String _tags)
 	{
 		UUID timeUUID = generateTimeUUID();
@@ -592,11 +635,21 @@ public class DBConnection {
 		
 	}
 	
+	
+	public boolean deleteSubscription(String _username, String _subscription_username)
+	{
+		try {
+		    SubscribesToTemplate.deleteColumn(_username, _subscription_username);
+			return true;
+		} catch (HectorException e) {
+		    return false;
+		}
+	}
+	
 		
 	private UUID generateTimeUUID()
 	{
 		UUID timeUUID = TimeUUIDUtils.getUniqueTimeUUIDinMillis();
-		
 		return timeUUID;
 	}
 		

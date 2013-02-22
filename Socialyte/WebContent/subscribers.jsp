@@ -3,7 +3,7 @@
     
 <%@ page import="java.util.*" %>
 <%@ page import="org.sclyt.store.*" %>
-    
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -13,14 +13,14 @@
 <body>
 
 <%
-					List<ProfileStore> subscriptions = (List<ProfileStore>)request.getAttribute("subscriptions");
+					List<ProfileStore> subscribers = (List<ProfileStore>)request.getAttribute("subscribers");
 					Iterator<ProfileStore> iterator;
 					
-					iterator = subscriptions.iterator();
+					iterator = subscribers.iterator();
 					
-					if (!iterator.hasNext()) //No subscriptions found
+					if (!iterator.hasNext()) //No subscribers found
 					{ %>
-						No subs found!
+						No subscribers found!
 						
 					<% }
 					
@@ -32,11 +32,12 @@
 						String avatar = single_profile.getAvatar();
 						String username = single_profile.getUsername();
 						%>
-							<img src="<%=avatar %>"/><%=full_name %><a href="/Socialyte/Subscriptions/remove/<%=username %>">  Remove</a><br/>
+							<img src="<%=avatar %>"/><%=full_name %><a href="/Socialyte/Subscribers/remove/<%=username %>">Remove</a><br/>
 						<%
 					}
 					
 					%>
+
 
 </body>
 </html>

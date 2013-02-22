@@ -23,6 +23,8 @@ public class Posts {
 		
 	}
 	
+	
+	/* DEPRECIATED LOL
 	public LinkedList<PostStore> getPosts()
 	{
 		int post_count = 0;
@@ -142,13 +144,15 @@ public class Posts {
 			}
 		}
 		
+		
+		
 		date = new Date();
 		System.out.println("[" + date + "] Sorting posts completed: " + countT + " cycles done in total.");
 		//END OF SHITTY SORT///////////////////////////////////////////////////////////////////////////////////////
 		
 		return sorted_list;
 	}
-	
+	*/
 	
 	public LinkedList<PostStore> getSubscriptionPosts(String _username)
 	{
@@ -269,12 +273,17 @@ public class Posts {
 			}
 		}
 		
+		for (int z = 0; z < sorted_dates.length; z++)
+		{
+			System.out.println(sorted_dates[z]);
+		}
+		
 		date = new Date();
 		System.out.println("[" + date + "] Sorting posts completed: " + countT + " cycles done in total.");
 		//END OF SHITTY SORT///////////////////////////////////////////////////////////////////////////////////////
 		
 		//return sorted_list;
-		return post_list;
+		return sorted_list;
 	}
 	
 	private boolean isSorted(long[] array)

@@ -69,12 +69,12 @@ public class NewPostController extends HttpServlet {
 			{
 				Date date = new Date();
 				System.out.println("[" + date + "] " + full_name + " created post body {" + body + "}, tags{" + tags + "}" );
-				RequestDispatcher rd = getServletContext().getRequestDispatcher("/post_success.jsp");
+				RequestDispatcher rd = getServletContext().getRequestDispatcher("/feedbackpages/post_success.jsp");
 				rd.forward(request, response);
 			}
 			else
 			{
-				RequestDispatcher rd = getServletContext().getRequestDispatcher("/post_fail.jsp");
+				RequestDispatcher rd = getServletContext().getRequestDispatcher("/feedbackpages/post_fail.jsp");
 				rd.forward(request, response);
 			}
 		}

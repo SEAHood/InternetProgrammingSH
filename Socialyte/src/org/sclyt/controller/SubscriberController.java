@@ -10,21 +10,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.sclyt.model.Posts;
+import org.sclyt.model.Subscribers;
 import org.sclyt.model.Subscriptions;
 import org.sclyt.store.Session;
 
 /**
- * Servlet implementation class SubscriptionController
+ * Servlet implementation class SubscriberController
  */
-@WebServlet("/SubscriptionController")
-public class SubscriptionController extends HttpServlet {
+@WebServlet("/SubscriberController")
+public class SubscriberController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public SubscriptionController() {
+    public SubscriberController() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -34,7 +34,7 @@ public class SubscriptionController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		loadSubscriptions(request, response);
+		loadSubscribers(request, response);
 	}
 
 	/**
@@ -42,10 +42,11 @@ public class SubscriptionController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		loadSubscriptions(request, response);
+		loadSubscribers(request, response);
 	}
 	
-	private void loadSubscriptions(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
+	
+	private void loadSubscribers(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
 	{
 		HttpSession session = req.getSession();
 		Session thisSession = (Session)session.getAttribute("session");
@@ -53,32 +54,17 @@ public class SubscriptionController extends HttpServlet {
 		if(thisSession != null)
 		{
 			String username = thisSession.getUsername();
-			Subscriptions subscriptions = new Subscriptions(username);
+			Subscribers subscribers = new Subscribers(username);
+			req.setAttribute("subscribers", subscribers.getSubscribers());
+			req.setAttribute("session", thisSession);
 			
-			if (req.getPathInfo() != null)
-			{
-				String parameters = req.getPathInfo();
-				if (parameters.contains("/remove/"))
-				{
-					String subscription_to_remove = parameters.replace("/remove/", "");
-					System.out.println("Removing subscription: " + username + " -> " + subscription_to_remove);
-					subscriptions.removeSubscription(subscription_to_remove);
-					
-					RequestDispatcher rd = getServletContext().getRequestDispatcher("/feedbackpages/subscription_removed.jsp");
-					rd.forward(req, res);
-				}
-			}
-			else
-			{
-				req.setAttribute("subscriptions", subscriptions.getSubscriptions());
-				req.setAttribute("session", thisSession);
-				
-				RequestDispatcher rd = getServletContext().getRequestDispatcher("/subscriptions.jsp");
-				rd.forward(req, res);
-			}
+			RequestDispatcher rd = getServletContext().getRequestDispatcher("/subscribers.jsp");
+			rd.forward(req, res);
+		
 		}
 		else
 		{
+			
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.jsp");
 			rd.forward(req, res);
 		}
