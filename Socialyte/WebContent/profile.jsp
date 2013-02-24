@@ -30,9 +30,19 @@
 			</div>
 			
 			<%
-				Session thisSession = (Session)request.getAttribute("session");
-				String username = thisSession.getUsername();
-			%>
+							Session thisSession = (Session)request.getAttribute("session");
+												String username = thisSession.getUsername();
+												
+												ProfileStore profile = (ProfileStore)request.getAttribute("profile");
+												String first_name = profile.getFirstName();
+												String surname = profile.getSurname();
+												String full_name = first_name + " " + surname;
+												String dob = profile.getDOBAsString();
+												String city = profile.getCity();
+												String country = profile.getCountry();
+												String email = profile.getEmail();
+												String avatar = profile.getAvatar();
+						%>
 			
 			<div id="menu_items">
 				<a href="/Socialyte/Home" class="tooltip" title="Home"><img src="/Socialyte/img/home_US.png" id="home" onmouseover="this.src='/Socialyte/img/home_S.png'" onmouseout="this.src='/Socialyte/img/home_US.png'"/></a>
@@ -48,6 +58,20 @@
 					<input class="blue_button" id="submit_search" type="submit" value="Go" >
 				</form>
 			</div>
+		</div>
+		
+		<div id="title_pane">
+		<%
+			if (username.equals(profile.getUsername()))
+			{%>
+				<span class="huge_text">My Profile</span>
+			<%}
+			else
+			{%>
+				<span class="huge_text"><%=first_name %>'s Profile</span>
+			<%
+			}
+			%>
 		</div>
 			
 		<div id="content">
@@ -74,19 +98,7 @@
 	    				</form>
 					</div>					
 				</div>
-				
-				<% 
-					ProfileStore profile = (ProfileStore)request.getAttribute("profile");
-					String first_name = profile.getFirstName();
-					String surname = profile.getSurname();
-					String full_name = first_name + " " + surname;
-					String dob = profile.getDOBAsString();
-					String city = profile.getCity();
-					String country = profile.getCountry();
-					String email = profile.getEmail();
-					String avatar = profile.getAvatar();
-				%>
-				
+								
 				<div id="profile_pane">
 					<div id="avatar">
 						<img src="<%=avatar %>"/>
@@ -108,6 +120,12 @@
 					<div id="location">
 						<span class="big_text">Location:</span><br/>
 						<%=city %>, <%=country %>
+					</div>
+					
+					<div id="controls">
+						<button class="blue_button">Subscribe</button>
+						<button class="blue_button">Edit Profile</button>
+						<button class="blue_button">Delete Account</button>
 					</div>
 					
 					<div id="dob">

@@ -21,7 +21,14 @@ public class Subscriptions {
 		return subscription_profiles;
 	}
 	
-	public boolean removeSubscription(String _subscription_username)
+	public boolean addSubscription(String _subscription_username)
+	{
+		DBConnection DBConn = new DBConnection();
+		DBConn.connect();
+		return DBConn.addSubscription(username, _subscription_username);		
+	}
+	
+	public boolean deleteSubscription(String _subscription_username)
 	{
 		DBConnection DBConn = new DBConnection();
 		DBConn.connect();

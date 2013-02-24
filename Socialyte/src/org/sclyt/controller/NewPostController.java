@@ -63,6 +63,7 @@ public class NewPostController extends HttpServlet {
 			String full_name = thisSession.getFullName();
 			String body = request.getParameter("body");
 			String tags = request.getParameter("tags");
+			request.setAttribute("session", thisSession);
 			
 			PostCreator creator = new PostCreator(username, full_name, body, tags);
 			if (creator.create())

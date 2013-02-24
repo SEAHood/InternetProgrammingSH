@@ -76,7 +76,7 @@ public class SignupController extends HttpServlet {
 		if (validation_result != "")
 		{
 			request.setAttribute("validation_error", validation_result);
-			RequestDispatcher rd = getServletContext().getRequestDispatcher("/Home");
+			RequestDispatcher rd = getServletContext().getRequestDispatcher("/Feed");
 			rd.forward(request, response);
 		}
 		else
@@ -86,14 +86,14 @@ public class SignupController extends HttpServlet {
 				Date date = new Date();
 				System.out.println("[" + date + "] New account created:" + first_name + "," + surname + "," + new_username + "," + new_password + "," + email);
 				request.setAttribute("account_created", true);
-				RequestDispatcher rd = getServletContext().getRequestDispatcher("/Home");
+				RequestDispatcher rd = getServletContext().getRequestDispatcher("/Feed");
 				rd.forward(request, response);
 			}
 			else
 			{
 				System.out.println("newAccount.execute() failed.");
 				request.setAttribute("account_creation_issue", true);
-				RequestDispatcher rd = getServletContext().getRequestDispatcher("/Home");
+				RequestDispatcher rd = getServletContext().getRequestDispatcher("/Feed");
 				rd.forward(request, response);
 			}
 		}

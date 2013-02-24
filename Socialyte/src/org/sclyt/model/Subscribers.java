@@ -19,4 +19,11 @@ String username;
 		LinkedList<ProfileStore> subscribers_profiles = DBConn.getSubscribers(username);
 		return subscribers_profiles;
 	}
+	
+	public boolean deleteSubscriber(String _sub_username)
+	{
+		DBConnection DBConn = new DBConnection();
+		DBConn.connect();
+		return DBConn.deleteSubscriber(username, _sub_username);
+	}
 }

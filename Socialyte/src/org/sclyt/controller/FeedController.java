@@ -2,6 +2,8 @@ package org.sclyt.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Iterator;
+import java.util.UUID;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -12,20 +14,23 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.sclyt.model.Login;
+import org.sclyt.model.Posts;
 import org.sclyt.store.Session;
+
+import me.prettyprint.hector.api.beans.Row;
 
 
 /**
- * Servlet implementation class LoginController
+ * Servlet implementation class FeedController
  */
-@WebServlet("/LoginController")
-public class LoginController extends HttpServlet {
+@WebServlet("/FeedController")
+public class FeedController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public LoginController() {
+    public FeedController() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -35,8 +40,7 @@ public class LoginController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-
-		attemptLogin(request, response);
+		directToFeed(request, response);
 	}
 
 	/**
@@ -44,57 +48,43 @@ public class LoginController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-
-		attemptLogin(request, response);
-		
+		directToFeed(request, response);
+		//RequestDispatcher rd = getServletContext().getRequestDispatcher("/Login");
+		//rd.forward(request, response);
+		//attemptLogin(request, response);
 	}
 	
 	
-	private void attemptLogin(HttpServletRequest req, HttpServletResponse response) throws ServletException, IOException 
+	private void directToFeed(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
 	{
 		HttpSession session = req.getSession();
-		PrintWriter out = response.getWriter();
-		
-		if (req.getParameter("logout") != null)
+		Session thisSession = (Session)session.getAttribute("session");
+				
+		if(thisSession != null)
 		{
-			session.removeAttribute("session");
-			req.removeAttribute("session");
-			RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.jsp");
-			rd.forward(req, response);			
+			Posts posts = new Posts();
+			req.setAttribute("posts", posts.getSubscriptionPosts(thisSession.getUsername()));
+			req.setAttribute("session", thisSession);
+			
+			RequestDispatcher rd = getServletContext().getRequestDispatcher("/feed.jsp");
+			rd.forward(req, res);
+			System.out.println("LOGGED IN");
 		}
 		else
 		{
-			String username = req.getParameter("username");
-			String password = req.getParameter("password");
-			Login login = null;
-			boolean success = false;
-						
-			if (username != "" && password != "")
+			if (req.getMethod().equals("POST") && req.getAttribute("validation_error") == null)
 			{
-				login = new Login(username, password);
-							
-				if (login.setup())
-					success = login.execute();
-			}
-			
-			if (success)
-			{
-				//out.println("LOGIN!");
-				Session thisSession = login.createSession();
-				
-				session.setAttribute("session", thisSession);
-				
-				//out.println(session.getAttribute("username"));
-				RequestDispatcher rd = getServletContext().getRequestDispatcher("/Feed");
-				rd.forward(req, response);
+				RequestDispatcher rd = getServletContext().getRequestDispatcher("/Login");
+				rd.forward(req, res);
 			}
 			else
 			{
-				req.setAttribute("invalid_login", true);
 				RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.jsp");
-				rd.forward(req, response);
+				rd.forward(req, res);
 			}
 		}
+		
 	}
+	
 
 }

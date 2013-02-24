@@ -207,93 +207,9 @@ public class Posts {
 	    	post_list.add(post);
 			post_count++;
 		}
-
 		
-		//BIG SHITTY SORT////////////////////////////////////////////////////////////////////////////////////////////
-		Date date = new Date();
-		System.out.println("[" + date + "] Posts requested - sorting");
-		long[] sorted_dates = new long[post_count];
-		int countT = 0;
-		int count1 = 0;
-		int count2 = 0;
-		int count3 = 0;
+		Collections.sort(post_list);
 		
-		Iterator<PostStore> post_iterator;
-		
-		post_iterator = post_list.iterator();
-		
-		while (post_iterator.hasNext())
-		{
-			PostStore row = (PostStore)post_iterator.next();
-			sorted_dates[countT] = row.getDateAsLong();
-			countT++;
-			count1++;
-		}
-				
-		//Sort longs
-		long temp;
-		
-		while (!isSorted(sorted_dates))
-		{
-			for (int j = 0; j < sorted_dates.length - 1; j++)
-			{
-				temp = sorted_dates[j];
-				
-				if (sorted_dates[j+1] > temp)
-				{
-					sorted_dates[j] = sorted_dates[j+1];
-					sorted_dates[j+1] = temp;
-					countT++;
-					count2++;
-					continue;
-				}
-			}
-		}
-		
-				
-		LinkedList<PostStore> sorted_list = new LinkedList<PostStore>();
-				
-		for (int i = 0; i < sorted_dates.length; i++)
-		{
-			Iterator<PostStore> sort_iterator = post_list.iterator();
-			while (sort_iterator.hasNext())
-			{
-				PostStore post = (PostStore)sort_iterator.next();
-				
-				//System.out.println("sorted_dates[i]: " + sorted_dates[i]);
-				if (sorted_dates[i] == post.getDateAsLong())
-				{
-					sorted_list.add(post);
-					countT++;
-					count3++;
-					break;
-				}
-				countT++;
-				count3++;
-			}
-		}
-		
-		for (int z = 0; z < sorted_dates.length; z++)
-		{
-			System.out.println(sorted_dates[z]);
-		}
-		
-		date = new Date();
-		System.out.println("[" + date + "] Sorting posts completed: " + countT + " cycles done in total.");
-		//END OF SHITTY SORT///////////////////////////////////////////////////////////////////////////////////////
-		
-		//return sorted_list;
-		return sorted_list;
+		return post_list;
 	}
-	
-	private boolean isSorted(long[] array)
-	{
-		for (int i = 0; i < array.length - 1; i++)
-		{
-			if (array[i+1] > array[i])
-				return false;
-		}
-		return true;
-	}
-
 }

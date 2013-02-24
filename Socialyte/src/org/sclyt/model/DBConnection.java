@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.UUID;
 
+import org.sclyt.store.CassandraStore;
 import org.sclyt.store.PostStore;
 import org.sclyt.store.ProfileStore;
 
@@ -21,6 +22,7 @@ import me.prettyprint.hector.api.Cluster;
 import me.prettyprint.hector.api.Keyspace;
 import me.prettyprint.hector.api.beans.OrderedRows;
 import me.prettyprint.hector.api.beans.Row;
+import me.prettyprint.hector.api.ddl.KeyspaceDefinition;
 import me.prettyprint.hector.api.exceptions.HectorException;
 import me.prettyprint.hector.api.factory.HFactory;
 import me.prettyprint.hector.api.query.QueryResult;
@@ -38,6 +40,8 @@ public class DBConnection {
 	Cluster cassCluster;
 	Keyspace cassKeyspace;
 	String _CF;
+	String ksp = "TESTSPACE";
+	CassandraStore CS;
 	
 	public DBConnection()
 	{
@@ -56,13 +60,29 @@ public class DBConnection {
 			{
 				//INITIALISE CONNECTION
 				
+				CS = CassandraStore.instance();
 				
 				
 				cassCluster = HFactory.getOrCreateCluster("Test Cluster","77.99.214.115:9160");
 				
-				cassKeyspace = HFactory.createKeyspace("TESTSPACE", cassCluster);
-						
-			
+				KeyspaceDefinition keyspaceDef = cassCluster.describeKeyspace(ksp);
+				//cassKeyspace = HFactory.createKeyspace(ksp, cassCluster);
+				
+				// If keyspace does not exist, the CFs don't exist either. => create them.
+				if (keyspaceDef == null) {
+					cassKeyspace = HFactory.createKeyspace(ksp, cassCluster);
+					CassandraDefinition cassDef = new CassandraDefinition(ksp);
+					cassDef.setup();
+					CS.setKeyspace(cassKeyspace);
+					System.out.println("THIS SHOULDN'T BE SHOWING UP");
+				}
+				else
+				{
+					//
+					cassKeyspace = CS.getKeyspace();
+					System.out.println(cassKeyspace.getKeyspaceName());
+				}
+				
 				//DEFINE TEMPLATE FOR COLUMNFAMILY
 				UserTemplate =  new ThriftColumnFamilyTemplate<String, String>(cassKeyspace,
 		                                                               "USER",
@@ -89,7 +109,7 @@ public class DBConnection {
 				
 				//DEFINE TEMPLATE FOR COLUMNFAMILY
 				UserPostTemplate =  new ThriftColumnFamilyTemplate<String, Long>(cassKeyspace,
-		                                                               "REVERSE_TEST",
+		                                                               "USER_POST",
 		                                                               StringSerializer.get(),
 		                                                               LongSerializer.get());	
 			
@@ -259,6 +279,7 @@ public class DBConnection {
 			
 			try
 			{
+				
 				res = UserTemplate.queryColumns(username);
 			}
 			catch (HectorException e)
@@ -289,6 +310,7 @@ public class DBConnection {
 		user_profile.setCity(city);
 		user_profile.setCountry(country);
 		user_profile.setAvatar(avatar);
+		user_profile.normaliseNulls();
 		
 		return user_profile;
 	}
@@ -636,16 +658,162 @@ public class DBConnection {
 	}
 	
 	
+	public LinkedList<ProfileStore> searchAll(String srch_first_name, String srch_surname, String srch_email, String srch_city)
+	{
+		LinkedList<ProfileStore> allProfiles = getAllUserProfiles();
+		LinkedList<ProfileStore> matchingProfiles = new LinkedList<ProfileStore>();
+		
+		Iterator<ProfileStore> iterator = allProfiles.iterator();
+		
+		while (iterator.hasNext())
+		{
+			ProfileStore single_profile = iterator.next();
+			
+			if (srch_first_name != "")
+			{
+				if (single_profile.getFirstName().equals(srch_first_name))
+				{
+					matchingProfiles.add(single_profile);
+					continue;
+				}
+			}
+			
+			if (srch_surname != "")
+			{
+				if (single_profile.getSurname().equals(srch_surname))
+				{
+					matchingProfiles.add(single_profile);
+					continue;
+				}
+			}
+			
+			if (srch_email != "")
+			{
+				if (single_profile.getEmail().equals(srch_email))
+				{
+					matchingProfiles.add(single_profile);
+					continue;
+				}
+			}
+			
+			if (srch_city != "")
+			{
+				if (single_profile.getCity().equals(srch_city))
+				{
+					matchingProfiles.add(single_profile);
+					continue;
+				}
+			}
+			
+		}
+		
+		return matchingProfiles;
+	}
+	
+	
+	public LinkedList<ProfileStore> getAllUserProfiles()
+	{
+		LinkedList<ProfileStore> result_profiles = new LinkedList<ProfileStore>();
+		ColumnFamilyResult<String, String> res = null;
+		boolean connected = false;
+		boolean err_found = false;
+		
+		while (!connected)
+		{
+			err_found = false;
+			
+			try
+			{
+				LinkedList<Row<String, String, String>> llist = new LinkedList<Row<String, String, String>>();
+				
+				int row_count = 100;
+
+		        RangeSlicesQuery<String, String, String> rangeSlicesQuery = HFactory
+		            .createRangeSlicesQuery(cassKeyspace, StringSerializer.get(), StringSerializer.get(), StringSerializer.get())
+		            .setColumnFamily("USER")
+		            .setRange("", "", false, 100)
+		            .setRowCount(row_count);
+
+		        rangeSlicesQuery.setKeys(null, null);
+		        QueryResult<OrderedRows<String, String, String>> result = rangeSlicesQuery.execute();
+		        OrderedRows<String, String, String> rows = result.get();
+		        Iterator<Row<String, String, String>> rowsIterator = rows.iterator();
+		 
+
+		        while (rowsIterator.hasNext()) 
+		        {
+		        	Row<String, String, String> row = rowsIterator.next();
+
+		            if (row.getColumnSlice().getColumns().isEmpty()) 
+		                continue;
+
+		            ProfileStore this_profile = fetchProfile(row.getKey());
+		            result_profiles.add(this_profile);
+		        }
+			}
+			catch (HectorException e)
+			{
+				System.out.println(e.getMessage());
+				err_found = true;		
+			}
+			
+			if (!err_found)
+			{
+				connected = true;
+			}
+		}
+		
+		return result_profiles;
+	}
+	
+	
+	public boolean addSubscription(String _username, String _subscription_username)
+	{
+		System.out.println("1: " + _username + "     2: " + _subscription_username);
+		
+		ColumnFamilyUpdater<String, String> new_subscription = SubscribesToTemplate.createUpdater(_username);
+		new_subscription.setString(_subscription_username, "");
+		//new_sub.setLong("time", System.currentTimeMillis());
+		
+		ColumnFamilyUpdater<String, String> new_subscriber = SubscribedToByTemplate.createUpdater(_subscription_username);
+		new_subscriber.setString(_username, "");
+		
+		try
+		{
+			SubscribesToTemplate.update(new_subscription);
+			SubscribedToByTemplate.update(new_subscriber);
+		}
+		catch (HectorException e)
+		{
+			System.out.println(e.getMessage());
+			return false;
+		}
+		
+		return true;
+	}
+	
 	public boolean deleteSubscription(String _username, String _subscription_username)
 	{
 		try {
 		    SubscribesToTemplate.deleteColumn(_username, _subscription_username);
+		    SubscribedToByTemplate.deleteColumn(_subscription_username, _username);
 			return true;
 		} catch (HectorException e) {
 		    return false;
 		}
 	}
 	
+	
+	public boolean deleteSubscriber(String _username, String _subscriber_username)
+	{
+		try {
+		    SubscribedToByTemplate.deleteColumn(_username, _subscriber_username);
+		    SubscribesToTemplate.deleteColumn(_subscriber_username, _username);
+			return true;
+		} catch (HectorException e) {
+		    return false;
+		}
+	}
 		
 	private UUID generateTimeUUID()
 	{

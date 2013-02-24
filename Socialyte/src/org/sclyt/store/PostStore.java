@@ -3,7 +3,7 @@ package org.sclyt.store;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class PostStore {
+public class PostStore implements Comparable<PostStore> {
 
 	String post_full_name;
 	String post_tags;
@@ -89,6 +89,12 @@ public class PostStore {
 	{
 		return rowcontents;
 		
+	}
+
+	@Override
+	public int compareTo(PostStore p2) {
+		// TODO Auto-generated method stub
+		return (int)(p2.post_id - this.post_id);
 	}
 
 }

@@ -28,6 +28,25 @@ public class SubscriberController extends HttpServlet {
         super();
         // TODO Auto-generated constructor stub
     }
+    
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		//loadSubscribers(request, response);
+    	HttpSession session = request.getSession();
+    	Session thisSession = (Session)session.getAttribute("session");
+    	String subscriber_username = request.getRequestURI().replace("/Socialyte/Subscribers/", "");
+    	String username = thisSession.getUsername();
+    	Subscribers subscribers = new Subscribers(username);
+    	subscribers.deleteSubscriber(subscriber_username);
+    	
+    	request.setAttribute("session", thisSession);
+    	request.setAttribute("success", "true");
+    	//response.sendRedirect("/Socialyte/feedbackpages/subscription_removed.jsp");
+    	
+    	//RequestDispatcher rd = getServletContext().getRequestDispatcher("/feedbackpages/subscription_removed.jsp");
+		
+    	//rd.forward(request, response);
+	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)

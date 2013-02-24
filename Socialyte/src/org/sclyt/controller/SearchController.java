@@ -1,9 +1,7 @@
 package org.sclyt.controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Iterator;
-import java.util.UUID;
+import java.util.LinkedList;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -13,23 +11,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.sclyt.model.Posts;
+import org.sclyt.model.Search;
+import org.sclyt.store.ProfileStore;
 import org.sclyt.store.Session;
 
-import me.prettyprint.hector.api.beans.Row;
-
-
 /**
- * Servlet implementation class HomeController
+ * Servlet implementation class SearchController
  */
-@WebServlet("/HomeController")
-public class HomeController extends HttpServlet {
+@WebServlet("/SearchController")
+public class SearchController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public HomeController() {
+    public SearchController() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -39,7 +35,7 @@ public class HomeController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		directToHome(request, response);
+		directToSearch(request, response);
 	}
 
 	/**
@@ -47,28 +43,42 @@ public class HomeController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		directToHome(request, response);
+		directToSearch(request, response);
 	}
 	
 	
-	private void directToHome(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
-	{
+	private void directToSearch(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+
 		HttpSession session = req.getSession();
 		Session thisSession = (Session)session.getAttribute("session");
-				
-		if(thisSession != null)
-		{
-			Posts posts = new Posts();
-			req.setAttribute("posts", posts.getSubscriptionPosts(thisSession.getUsername()));
-			req.setAttribute("session", thisSession);
-			
-			RequestDispatcher rd = getServletContext().getRequestDispatcher("/home.jsp");
-			rd.forward(req, res);
 		
+		if (thisSession != null)
+		{
+			if (req.getMethod().equals("POST"))
+			{
+				String first_name = req.getParameter("first_name");
+				String surname = req.getParameter("surname");
+				String email = req.getParameter("email");
+				String city = req.getParameter("city");
+				Search search = new Search(first_name, surname, email, city);
+				
+				LinkedList<ProfileStore> results = search.go();
+				
+				req.setAttribute("session", thisSession);
+				req.setAttribute("search_results", results);
+				RequestDispatcher rd = getServletContext().getRequestDispatcher("/profile_search.jsp");
+				rd.forward(req, res);
+			}
+			else
+			{
+				req.setAttribute("session", thisSession);
+				System.out.println(thisSession.toString());
+				RequestDispatcher rd = getServletContext().getRequestDispatcher("/profile_search.jsp");
+				rd.forward(req, res);
+			}
 		}
 		else
 		{
-			
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.jsp");
 			rd.forward(req, res);
 		}

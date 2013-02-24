@@ -9,7 +9,7 @@
 <link rel="stylesheet" type="text/css" href="/Socialyte/css/main_style.css">
 <link rel="stylesheet" type="text/css" href="/Socialyte/css/login_style.css">
 
-<script type="text/JavaScript" src="js/scripts.js"></script> 
+<script type="text/JavaScript" src="/Socialyte/js/scripts.js"></script> 
 <script src="http://code.jquery.com/jquery-latest.js"></script>
 </head>
 
@@ -54,33 +54,37 @@
 			else if (request.getAttribute("validation_error") != null)
 			{ %>				
 				<div class="message_popup">
-					<span id="red_text">Account Creation Failed!</span><br/><span class="small_text">
+					<span class="red_text">Account Creation Failed!</span><br/><span class="small_text">
 				<%
 					String validation_result = (String)request.getAttribute("validation_error");
 					System.out.println("JSP:" + validation_result);
 					String error_text;
 					
 					if (validation_result.contains("INV_FNAME,"))
-						%>Invalid first name<br/>
+						%>Invalid first name (must be 2-15 characters).<br/>
 					<%					
 					if (validation_result.contains("INV_SNAME,"))
-						%>Invalid surname<br/>
+						%>Invalid surname (must be 2-25 characters).<br/>
 						
 					<%	
 					if (validation_result.contains("INV_USR,"))
-						%>Invalid username<br/>
+						%>Invalid username (must be 5-15 characters).<br/>
 					
 					<%	
 					if (validation_result.contains("INV_USR_EXISTS,"))
-						%>Username taken!<br/>
+						%>Username taken.<br/>
 						
 					<%	
 					if (validation_result.contains("INV_EMAIL,"))
-						%>Invalid email name<br/>
+						%>Invalid email address.<br/>
 						
 					<%	
 					if (validation_result.contains("INV_PASS,"))
-						%>Invalid password<br/>
+						%>Invalid password (must be 5-15 characters).<br/>
+						
+						<%	
+					if (validation_result.contains("INV_PASS_MATCH,"))
+						%>Passwords don't match.<br/>
 						
 					</span>	
 				
@@ -125,7 +129,7 @@
 				<div id="login_pane">
 					<img src="/Socialyte/img/login_here.png" id="login_img" /><br/>
 					<img src="/Socialyte/img/dots.png" id="dots_img" />
-					<form id="login" action="/Socialyte/Login" method="POST" >
+					<form id="login" action="/Socialyte/Feed" method="POST" >
 						<input class="form_textbox" id="username_textbox" type="text" name="username" size="25" placeholder="Username"><br/>
 						<input class="form_textbox" id="password_textbox" type="password" name="password" size="25" placeholder="Password"><br/>
 						<input class="blue_button" id="submit_login" onclick="showLoading()" type="submit" value="Login" >

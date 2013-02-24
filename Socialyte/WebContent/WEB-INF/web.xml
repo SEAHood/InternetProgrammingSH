@@ -2,7 +2,7 @@
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
   <display-name>Socialyte</display-name>
   <welcome-file-list>
-    <welcome-file>HomeController</welcome-file>
+    <welcome-file>FeedController</welcome-file>
     <welcome-file>index.html</welcome-file>
     <welcome-file>index.htm</welcome-file>
     <welcome-file>index.jsp</welcome-file>
@@ -19,12 +19,12 @@
     <url-pattern>/Login</url-pattern>
   </servlet-mapping>
   <servlet>
-    <servlet-name>HomeController</servlet-name>
-    <servlet-class>org.sclyt.controller.HomeController</servlet-class>
+    <servlet-name>FeedController</servlet-name>
+    <servlet-class>org.sclyt.controller.FeedController</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>HomeController</servlet-name>
-    <url-pattern>/Home</url-pattern>
+    <servlet-name>FeedController</servlet-name>
+    <url-pattern>/Feed</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>NewPostController</servlet-name>
@@ -58,12 +58,20 @@
     <servlet-name>SubscriptionController</servlet-name>
     <url-pattern>/Subscriptions/*</url-pattern>
   </servlet-mapping>
-    <servlet>
+  <servlet>
     <servlet-name>SubscriberController</servlet-name>
     <servlet-class>org.sclyt.controller.SubscriberController</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>SubscriberController</servlet-name>
-    <url-pattern>/Subscribers</url-pattern>
+    <url-pattern>/Subscribers/*</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>SearchController</servlet-name>
+    <servlet-class>org.sclyt.controller.SearchController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SearchController</servlet-name>
+    <url-pattern>/Search</url-pattern>
   </servlet-mapping>
 </web-app>

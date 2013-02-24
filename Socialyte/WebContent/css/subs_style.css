@@ -1,0 +1,51 @@
+#subs_pane {
+	z-index:100;
+	margin-bottom:40px;
+	overflow:auto;
+	width:500px;
+	margin-left:auto;
+	margin-right:auto;
+	text-align:center;
+	
+	position:relative;
+	top:50px;
+}
+
+
+.single_sub {
+	float:left;
+	margin-left:10px;
+	margin-right:10px;
+	margin-bottom:10px;
+	width:225px;
+	top:50px;
+	background-color:#F0F0F0;
+	border-radius: 10px;
+	border:1px solid #C0C0C0;
+}
+	
+.sub_avatar {
+	float:left;
+	width:70px;
+	height:70px;
+	padding:5px;
+}
+
+.sub_avatar img {
+	border-radius: 10px;
+	border:1px solid #808080;
+}
+
+.sub_info {
+	padding-top:5px;
+	padding-left:5px;
+	text-align:left;
+	float:left;
+}
+
+#add_new {
+	text-align:center;
+	padding-top:5px;
+	padding-bottom:5px;
+	border:2px inset #C0C0C0;
+}

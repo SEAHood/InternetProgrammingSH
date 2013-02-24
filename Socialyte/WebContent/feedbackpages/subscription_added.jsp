@@ -1,17 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
     
-<%@ page import="java.util.*" %>
-<%@ page import="org.sclyt.store.*" %>
+    <%@ page import="java.util.*" %>
+	<%@ page import="org.sclyt.store.*" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
+<html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
-<link rel="shortcut icon" href="img/favicon.ico" />
+<title>Socialyte</title>
+<link rel="shortcut icon" href="/Socialyte/img/favicon.ico" />
 <link rel="stylesheet" type="text/css" href="/Socialyte/css/main_style.css">
-<link rel="stylesheet" type="text/css" href="/Socialyte/css/subs_style.css">
+<link rel="stylesheet" type="text/css" href="/Socialyte/css/profile_style.css">
 
 <link rel="stylesheet" type="text/css" href="/Socialyte/css/tooltipster.css" />
 <script src="http://code.jquery.com/jquery-latest.js"></script>
@@ -20,40 +21,24 @@
 	$(document).ready(function() {
 	    $('.tooltip').tooltipster();
 	});
-	
-	function deleteSub(username) {
-		$.ajax({
-		url: '/Socialyte/Subscribers/' + username,
-		type: 'DELETE',
-		error: function(jqXHR, textStatus, errorThrown) { 
-			console.log("Error: " + jqXHR.responseText);
-			console.log("Error: " + textStatus);
-			console.log("Error: " + errorThrown);
-		},
-        success:function(response){
-        	window.location.href = "/Socialyte/feedbackpages/subscriber_removed.jsp";
-        }
-		});
-	};
 </script>
 </head>
-
 <body>
-	<div id="wrapper">
-
+<div id="wrapper">
 		<div id="top_bar">
-			
 			<div id="logo_div">
-				<a href="/Socialyte/"><img src="img/logo.png" id="logo" /></a>
+				<a href="/Socialyte/"><img src="/Socialyte/img/logo.png" id="logo" /></a>
 			</div>
 			
+			
 			<%
-							Session thisSession = (Session)request.getAttribute("session");
-							String username = thisSession.getUsername();
+				Session thisSession = (Session)request.getAttribute("session");
+				System.out.println(thisSession.toString());
+				String username = thisSession.getUsername();			
 			%>
 			
 			<div id="menu_items">
-				<a href="/Socialyte/Feed" class="tooltip" title="Home"><img src="/Socialyte/img/home_US.png" id="home" onmouseover="this.src='/Socialyte/img/home_S.png'" onmouseout="this.src='/Socialyte/img/home_US.png'"/></a>
+				<a href="/Socialyte/Home" class="tooltip" title="Home"><img src="/Socialyte/img/home_US.png" id="home" onmouseover="this.src='/Socialyte/img/home_S.png'" onmouseout="this.src='/Socialyte/img/home_US.png'"/></a>
 				<a href="/Socialyte/Profile/<%=username %>" class="tooltip" title="My Profile"><img src="/Socialyte/img/profile_US.png" id="profile" onmouseover="this.src='/Socialyte/img/profile_S.png'" onmouseout="this.src='/Socialyte/img/profile_US.png'"/></a>
 				<a href="/Socialyte/Post/new" class="tooltip" title="New Post"><img src="/Socialyte/img/newpost_US.png" id="new_post" onmouseover="this.src='/Socialyte/img/newpost_S.png'" onmouseout="this.src='/Socialyte/img/newpost_US.png'"/></a>
 				<a href="/Socialyte/Subscribers" class="tooltip" title="Subscribers"><img src="/Socialyte/img/subscribers_US.png"  id="subscribers" onmouseover="this.src='/Socialyte/img/subscribers_S.png'" onmouseout="this.src='/Socialyte/img/subscribers_US.png'"/></a>
@@ -67,8 +52,11 @@
 				</form>
 			</div>
 		</div>
+		
+			
 			
 		<div id="content">
+		
 			<div id="user_pane">
 				<div id="user_avatar">
 					<% 
@@ -92,52 +80,27 @@
 				</div>
 				
 			</div>
-			
-			<div id="title_pane">
-				<span class="huge_text">Subscribers</span>
+		
+			<div id="success_msg">
+			<%
+				String success = (String)request.getAttribute("success");
+				if (success.equals("true"))
+				{
+				%>
+				<span class="green_text">Success</span><br/>
+				Subscription added!
+				<%
+				}
+				else
+				{%>
+				<span class="red_text">Fail</span><br/>
+				Subscription not added!
+				<%}%>
 			</div>
-
-			<div id="subs_pane">
-
-<%
-					List<ProfileStore> subscribers = (List<ProfileStore>)request.getAttribute("subscribers");
-					Iterator<ProfileStore> iterator;
-					
-					iterator = subscribers.iterator();
-					
-					if (!iterator.hasNext()) //No subscribers found
-					{ %>
-						<span class="red_text">No subscribers found!</span>
-						
-					<% }
-					
-					
-					while (iterator.hasNext())
-					{
-						ProfileStore single_profile = (ProfileStore)iterator.next();
-						String profile_full_name = single_profile.getFirstName() + " " + single_profile.getSurname();
-						String profile_avatar = single_profile.getAvatar();
-						String profile_username = single_profile.getUsername();
-						%>
-							<div class="single_sub">
-								<div class="sub_avatar">
-									<img src="<%=profile_avatar %>"/>
-								</div>
-								<div class="sub_info">
-									 <span class="big_text"><%=profile_full_name %></span><br/>
-									 <a href="/Socialyte/Profile/<%=profile_username %>"><button class="blue_button">View Profile</button></a><br/>
-									 <button class="blue_button" onclick="deleteSub('<%=profile_username %>');">Remove</button><br/>
-								</div>
-							</div>
-						<%
-					}
-					
-					%>
-			</div>
+		
 		</div>
 		
-		
-			
+	
 		<div id="footer">
 			<p>Copyright &copy; Socialyte 2013</p>
 		</div>
