@@ -13,11 +13,12 @@ public class DataValidator {
 		account = _account;
 	}
 
+	//Validate account details
 	public String validate()
 	{
 		String validation_errors = "";
 		
-		//MAKE SUM ERRORS YO
+		//Create error codes
 		if (!validateFirstName(account.first_name))
 			validation_errors += "INV_FNAME,";
 		
@@ -35,7 +36,6 @@ public class DataValidator {
 				validation_errors += "INV_USR_EXISTS,";
 		}
 		
-		
 		if (!validateEmail(account.email))
 			validation_errors += "INV_EMAIL,";
 		
@@ -49,35 +49,43 @@ public class DataValidator {
 		return validation_errors;
 	}
 	
+	
+	//Validate first name
+	//Min 2 chars
+	//Max 15 chars
 	private boolean validateFirstName(String first_name)
 	{
 		if (first_name.length() < 2 || first_name.length() > 15)
 			return false;
-		//Min 2 chars
-		//Max 15 chars
+		
 		return true;
 	}
 	
+	//Validate surname
+	//Min 2 chars
+	//Max 25 chars
 	private boolean validateSurname(String surname)
 	{
 		if (surname.length() < 2 || surname.length() > 25)
 			return false;
-		//Min 2 chars
-		//Max 25 chars
+		
 		return true;
 	}
 	
 	
+	//Validate username
+	//Min 5 chars
+	//Max 15 chars
 	private boolean validateUsername(String username)
 	{
 		if (username.length() < 5 || username.length() > 15)
 			return false;
-		//Min 5 chars
-		//Max 15 chars
+		
 		return true;
 	}
 	
 	
+	//Check username is not taken
 	private boolean checkUsernameNotTaken(String username)
 	{
 		DBConnection DBConn;
@@ -103,8 +111,6 @@ public class DataValidator {
 				connected = true;
 			}
 		}
-
-
 		
 		if (user_exists)
 			return false;
@@ -113,15 +119,19 @@ public class DataValidator {
 	}
 	
 	
+	//Validate password
+	//Min 6 chars
+	//Max 15 chars
 	private boolean validatePassword(String password)
 	{
 		if (password.length() < 2 || password.length() > 15)
 			return false;
-		//Min 6 chars
-		//Max 15 chars
+		
 		return true;
 	}
 	
+	
+	//Ensure passwords match
 	private boolean matchPasswords(String password, String password_c)
 	{
 		if (password.equals(password_c))
@@ -130,6 +140,11 @@ public class DataValidator {
 			return false;
 	}
 	
+	
+	//Validate email
+	//Min 5 chars
+	//Max 50 chars
+	//Must be email format
 	private boolean validateEmail(String email)
 	{
 		if (email.length() < 5 || email.length() > 50)
@@ -139,8 +154,7 @@ public class DataValidator {
 
 		if (!emailFormat.matcher(email).matches())
 		    return false;
-		//Min 5 chars
-		//Max 50 chars
+		
 		return true;
 	}
 }

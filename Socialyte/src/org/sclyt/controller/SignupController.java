@@ -49,62 +49,39 @@ public class SignupController extends HttpServlet {
 		
 		String default_avatar = "/Socialyte/img/profiles/default.png";
 		
+		//Create signup object and validate
 		Signup newAccount = new Signup(first_name, surname, new_username, new_password, new_password_c, email, default_avatar);
 		DataValidator validator = new DataValidator(newAccount);
 		String validation_result = validator.validate();
 		
-		/*
-		if (validation_result.contains("INV_FNAME,"))
-			//do dis
-		
-		if (validation_result.contains("INV_SNAME,"))
-			//do dis
-		
-		if (validation_result.contains("INV_USR,"))
-			//do dis
-		
-		if (validation_result.contains("INV_USR_EXISTS,"))
-			//do dis
-			
-		if (validation_result.contains("INV_EMAIL,"))
-			//do dis
-		
-		if (validation_result.contains("INV_PASS,"))
-			//do dis
-		*/		
 		System.out.println(validation_result);
 		if (validation_result != "")
 		{
+			//Validation error
 			request.setAttribute("validation_error", validation_result);
-			RequestDispatcher rd = getServletContext().getRequestDispatcher("/Feed");
+			RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.jsp");
 			rd.forward(request, response);
 		}
 		else
 		{
 			if (newAccount.execute())
 			{
+				//Account created
 				Date date = new Date();
 				System.out.println("[" + date + "] New account created:" + first_name + "," + surname + "," + new_username + "," + new_password + "," + email);
 				request.setAttribute("account_created", true);
-				RequestDispatcher rd = getServletContext().getRequestDispatcher("/Feed");
+				RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.jsp");
 				rd.forward(request, response);
 			}
 			else
 			{
+				//Unknown problem
 				System.out.println("newAccount.execute() failed.");
 				request.setAttribute("account_creation_issue", true);
-				RequestDispatcher rd = getServletContext().getRequestDispatcher("/Feed");
+				RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.jsp");
 				rd.forward(request, response);
 			}
 		}
-		
-		//DO VALIDATION
-		
-		
-		//DO DATABASE INPUT
-		
-		
-		//FORWARD TO LOGIN WITH DETAILS ON REQUEST
 	}
 
 }

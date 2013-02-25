@@ -27,6 +27,14 @@
     <url-pattern>/Feed</url-pattern>
   </servlet-mapping>
   <servlet>
+    <servlet-name>AllPostsController</servlet-name>
+    <servlet-class>org.sclyt.controller.AllPostsController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AllPostsController</servlet-name>
+    <url-pattern>/AllPosts</url-pattern>
+  </servlet-mapping>
+  <servlet>
     <servlet-name>NewPostController</servlet-name>
     <servlet-class>org.sclyt.controller.NewPostController</servlet-class>
   </servlet>

@@ -14,7 +14,7 @@ public class PostStore implements Comparable<PostStore> {
 	
 	String rowcontents;
 	
-	
+	//-------------MUTATORS------------------------//
 	public void setFullName(String _full_name)
 	{
 		post_full_name = _full_name;

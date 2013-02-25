@@ -6,6 +6,8 @@ public class Session {
 	String full_name;
 	String avatar;
 	
+	
+	//-------------MUTATORS------------------------//
 	public void setUsername(String _username)
 	{
 		username = _username;
@@ -21,6 +23,8 @@ public class Session {
 		avatar = _avatar;
 	}
 	
+	
+	//-------------ACCESSORS-----------------------//
 	public String getUsername()
 	{
 		return username;

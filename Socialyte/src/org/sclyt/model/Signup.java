@@ -1,12 +1,6 @@
 package org.sclyt.model;
 
-import me.prettyprint.cassandra.serializers.StringSerializer;
 import me.prettyprint.cassandra.service.template.ColumnFamilyTemplate;
-import me.prettyprint.cassandra.service.template.ThriftColumnFamilyTemplate;
-import me.prettyprint.hector.api.Cluster;
-import me.prettyprint.hector.api.Keyspace;
-import me.prettyprint.hector.api.exceptions.HectorException;
-import me.prettyprint.hector.api.factory.HFactory;
 
 public class Signup {
 	
@@ -21,6 +15,7 @@ public class Signup {
 	String email;
 	String avatar;
 	
+	//Initialise variables
 	public Signup(String _first_name, String _surname, String _username, String _password, String _password_c, String _email, String _avatar)
 	{
 		first_name = _first_name;
@@ -33,6 +28,7 @@ public class Signup {
 		
 	}
 	
+	//Start signup process
 	public boolean execute()
 	{
 		DBConnection DBConn = new DBConnection();
@@ -40,14 +36,16 @@ public class Signup {
 		if (DBConn.connect())
 		{
 			if (DBConn.createAccount(first_name, surname, username, password, email, avatar))
-				return true;
+			{
+				DBConn.addSubscription(username, username);
+			}
+			return true;
 		}
 		else
 		{
 			System.out.println("Signup.execute() failed.");
 			return false;
 		}
-		return false;
 	}
 
 }

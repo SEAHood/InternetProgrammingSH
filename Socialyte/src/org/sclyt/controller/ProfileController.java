@@ -36,7 +36,6 @@ public class ProfileController extends HttpServlet {
 		// TODO Auto-generated method stub
 		HttpSession session = request.getSession();
 		
-		
 		if ((Session)session.getAttribute("session") != null)
 		{
 			Session thisSession = (Session)session.getAttribute("session");
@@ -45,12 +44,12 @@ public class ProfileController extends HttpServlet {
 			String username = request.getPathInfo();
 			username = username.replace("/", "");
 			System.out.println(username);
-			//String username = request.getParameter("username");
 		
 			ProfileConnector connector = new ProfileConnector(username);
 			
 			if (connector.setup())
 			{
+				//Direct to profile page
 				profile = connector.execute();
 				profile.normaliseNulls();
 				request.setAttribute("profile", profile);
@@ -60,6 +59,7 @@ public class ProfileController extends HttpServlet {
 		}
 		else
 		{
+			//No user logged in - direct to login
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.jsp");
 			rd.forward(request, response);
 		}
@@ -73,7 +73,6 @@ public class ProfileController extends HttpServlet {
 		HttpSession session = request.getSession();
 		Session thisSession = (Session)session.getAttribute("session");
 		request.setAttribute("session", thisSession);
-		
 	}
 
 }

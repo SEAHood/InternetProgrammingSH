@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.sclyt.model.Subscribers;
-import org.sclyt.model.Subscriptions;
 import org.sclyt.store.Session;
 
 /**
@@ -31,7 +30,7 @@ public class SubscriberController extends HttpServlet {
     
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		//loadSubscribers(request, response);
+    	//Delete subscriber
     	HttpSession session = request.getSession();
     	Session thisSession = (Session)session.getAttribute("session");
     	String subscriber_username = request.getRequestURI().replace("/Socialyte/Subscribers/", "");
@@ -41,11 +40,6 @@ public class SubscriberController extends HttpServlet {
     	
     	request.setAttribute("session", thisSession);
     	request.setAttribute("success", "true");
-    	//response.sendRedirect("/Socialyte/feedbackpages/subscription_removed.jsp");
-    	
-    	//RequestDispatcher rd = getServletContext().getRequestDispatcher("/feedbackpages/subscription_removed.jsp");
-		
-    	//rd.forward(request, response);
 	}
 
 	/**
@@ -65,6 +59,7 @@ public class SubscriberController extends HttpServlet {
 	}
 	
 	
+	//Load a list of subscribers and hand to JSP
 	private void loadSubscribers(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
 	{
 		HttpSession session = req.getSession();
@@ -79,11 +74,9 @@ public class SubscriberController extends HttpServlet {
 			
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/subscribers.jsp");
 			rd.forward(req, res);
-		
 		}
 		else
 		{
-			
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.jsp");
 			rd.forward(req, res);
 		}

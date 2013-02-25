@@ -26,8 +26,7 @@ public class Login {
 		login_password = _password;
 	}
 	
-
-	
+	//Set up DB connection
 	public boolean setup()
 	{
 		DBConn = new DBConnection();
@@ -35,6 +34,7 @@ public class Login {
 		return success;
 	}
 	
+	//Execute login
 	public boolean execute()
 	{
 		if (DBConn.attemptLogin(login_username, login_password))
@@ -43,6 +43,7 @@ public class Login {
 			return false;		
 	}
 	
+	//Create session
 	public Session createSession()
 	{
 		Session thisSession = new Session();

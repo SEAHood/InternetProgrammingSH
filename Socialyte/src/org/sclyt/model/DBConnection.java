@@ -6,18 +6,14 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.UUID;
 
-import org.sclyt.store.CassandraStore;
-import org.sclyt.store.PostStore;
 import org.sclyt.store.ProfileStore;
 
 import me.prettyprint.cassandra.serializers.LongSerializer;
 import me.prettyprint.cassandra.serializers.StringSerializer;
-import me.prettyprint.cassandra.serializers.UUIDSerializer;
 import me.prettyprint.cassandra.service.template.ColumnFamilyResult;
 import me.prettyprint.cassandra.service.template.ColumnFamilyTemplate;
 import me.prettyprint.cassandra.service.template.ColumnFamilyUpdater;
 import me.prettyprint.cassandra.service.template.ThriftColumnFamilyTemplate;
-import me.prettyprint.cassandra.utils.TimeUUIDUtils;
 import me.prettyprint.hector.api.Cluster;
 import me.prettyprint.hector.api.Keyspace;
 import me.prettyprint.hector.api.beans.OrderedRows;
@@ -40,19 +36,18 @@ public class DBConnection {
 	Cluster cassCluster;
 	Keyspace cassKeyspace;
 	String _CF;
-	String ksp = "TESTSPACE";
-	CassandraStore CS;
+	String ksp = "SOCIALYTE";
 	
 	public DBConnection()
 	{
-		
 	}
 	
+	//Initial connection for DBConnection
 	public boolean connect()
 	{		
+		//Messy error avoidance - All host pools marked down - didn't find solution
 		boolean connected = false;
 		boolean err_found = false;
-	
 	
 		while (!connected)
 		{
@@ -60,28 +55,23 @@ public class DBConnection {
 			{
 				//INITIALISE CONNECTION
 				
-				CS = CassandraStore.instance();
-				
-				
 				cassCluster = HFactory.getOrCreateCluster("Test Cluster","77.99.214.115:9160");
 				
+				//Attempt to describe keyspace
 				KeyspaceDefinition keyspaceDef = cassCluster.describeKeyspace(ksp);
-				//cassKeyspace = HFactory.createKeyspace(ksp, cassCluster);
 				
-				// If keyspace does not exist, the CFs don't exist either. => create them.
+				// If keyspace doesn't exist, create it and set CFs up
 				if (keyspaceDef == null) {
 					cassKeyspace = HFactory.createKeyspace(ksp, cassCluster);
 					CassandraDefinition cassDef = new CassandraDefinition(ksp);
 					cassDef.setup();
-					CS.setKeyspace(cassKeyspace);
-					System.out.println("THIS SHOULDN'T BE SHOWING UP");
 				}
 				else
 				{
-					//
-					cassKeyspace = CS.getKeyspace();
-					System.out.println(cassKeyspace.getKeyspaceName());
+					//For whatever reason it will only work if I use this
+					cassKeyspace = HFactory.createKeyspace(ksp, cassCluster);
 				}
+				
 				
 				//DEFINE TEMPLATE FOR COLUMNFAMILY
 				UserTemplate =  new ThriftColumnFamilyTemplate<String, String>(cassKeyspace,
@@ -112,12 +102,6 @@ public class DBConnection {
 		                                                               "USER_POST",
 		                                                               StringSerializer.get(),
 		                                                               LongSerializer.get());	
-			
-				//DEFINE TEMPLATE FOR COLUMNFAMILY
-				/*UUIDTemplate =  new ThriftColumnFamilyTemplate<UUID, String>(cassKeyspace,
-		                                                               columnFamily,
-		                                                               UUIDSerializer.get(),
-		                                                               StringSerializer.get());	*/
 				
 				//DEFINE TEMPLATE FOR COLUMNFAMILY
 				PostTemplate =  new ThriftColumnFamilyTemplate<Long, String>(cassKeyspace,
@@ -141,13 +125,15 @@ public class DBConnection {
 		return false;
 	}
 	
+	
+	//Return true if username exists (signup validation)
 	public boolean checkUsernameExists(String username)
 	{
 		ColumnFamilyResult<String, String> res = null;
 		boolean connected = false;
 		boolean err_found = false;
 		
-		
+		//Error avoidance
 		while (!connected)
 		{
 			err_found = false;
@@ -177,6 +163,7 @@ public class DBConnection {
 	}
 	
 	
+	//Fetches an avatar from <username>
 	public String fetchAvatar(String username)
 	{
 		String avatar;
@@ -185,7 +172,7 @@ public class DBConnection {
 		boolean connected = false;
 		boolean err_found = false;
 		
-		
+		//Error avoidance
 		while (!connected)
 		{
 			err_found = false;
@@ -215,6 +202,7 @@ public class DBConnection {
 	}
 	
 	
+	//Fetches a full name from <username>
 	public String fetchFullName(String username)
 	{
 		String first_name;
@@ -224,7 +212,7 @@ public class DBConnection {
 		boolean connected = false;
 		boolean err_found = false;
 		
-		
+		//Error avoidance
 		while (!connected)
 		{
 			err_found = false;
@@ -257,6 +245,7 @@ public class DBConnection {
 	}
 		
 	
+	//Fetches a single profile
 	public ProfileStore fetchProfile(String username)
 	{
 		String first_name;
@@ -273,6 +262,7 @@ public class DBConnection {
 		boolean connected = false;
 		boolean err_found = false;
 				
+		//Error avoidance
 		while (!connected)
 		{
 			err_found = false;
@@ -316,13 +306,14 @@ public class DBConnection {
 	}
 	
 	
+	//Attempts to log the user into the system
 	public boolean attemptLogin(String login_username, String login_password)
 	{
 		ColumnFamilyResult<String, String> res = null;
 		boolean connected = false;
 		boolean err_found = false;
 		
-		
+		//Error avoidance
 		while (!connected)
 		{
 			err_found = false;
@@ -383,13 +374,12 @@ public class DBConnection {
                 continue;
 
             llist.add(row);
-        }
-
-	    
+        }	    
 	    return llist;
 	}
 	
 	
+	//Returns a list of posts by <username>'s subscriptions
 	public LinkedList<ColumnFamilyResult<Long, String>> querySubscriptionPosts(String _username) //LinkedList<Row<Long, String, String>>
 	{		
 		LinkedList<ColumnFamilyResult<Long, String>> all_sub_posts = new LinkedList<ColumnFamilyResult<Long, String>>();
@@ -399,7 +389,7 @@ public class DBConnection {
 		boolean connected = false;
 		boolean err_found = false;
 		
-		
+		//Error avoidance
 		while (!connected)
 		{
 			err_found = false;
@@ -429,7 +419,8 @@ public class DBConnection {
 			
 			boolean conn = false;
 			boolean err = false;
-						
+					
+			//Error avoidance
 			while (!conn)
 			{
 				err = false;
@@ -468,6 +459,7 @@ public class DBConnection {
 	}
 	
 	
+	//Returns a list of <username>'s subscriptions
 	public LinkedList<ProfileStore> getSubscriptions(String _username)
 	{
 		LinkedList<ProfileStore> subscription_profiles = new LinkedList<ProfileStore>();
@@ -475,6 +467,7 @@ public class DBConnection {
 		boolean connected = false;
 		boolean err_found = false;
 		
+		//Error avoidance
 		while (!connected)
 		{
 			err_found = false;
@@ -509,6 +502,7 @@ public class DBConnection {
 	}
 	
 	
+	//Returns a list of <username>'s subscribers
 	public LinkedList<ProfileStore> getSubscribers(String _username)
 	{
 		LinkedList<ProfileStore> subscriber_profiles = new LinkedList<ProfileStore>();
@@ -516,6 +510,7 @@ public class DBConnection {
 		boolean connected = false;
 		boolean err_found = false;
 		
+		//Error avoidance
 		while (!connected)
 		{
 			err_found = false;
@@ -550,26 +545,20 @@ public class DBConnection {
 	}
 	
 	
+	//Creates a post
 	public boolean createPost(String _username, String _full_name, String _body, String _tags)
 	{
-		UUID timeUUID = generateTimeUUID();
 		long timestamp = System.currentTimeMillis();
 		// UPDATE / CREATE CODE
 		// <String, String> correspond to key and Column name.
-		//ColumnFamilyUpdater<UUID, String> nameUpdater = UUIDTemplate.createUpdater(timeUUID);
 		ColumnFamilyUpdater<Long, String> nameUpdater = PostTemplate.createUpdater(timestamp);
 		nameUpdater.setString("full_name", _full_name);
-		nameUpdater.setLong("time", System.currentTimeMillis());
 		
-		//ColumnFamilyUpdater<UUID, String> bodyUpdater = UUIDTemplate.createUpdater(timeUUID);
 		ColumnFamilyUpdater<Long, String> bodyUpdater = PostTemplate.createUpdater(timestamp);
 		bodyUpdater.setString("body", _body);
-		bodyUpdater.setLong("time", System.currentTimeMillis());
 		
-		//ColumnFamilyUpdater<UUID, String> tagsUpdater = UUIDTemplate.createUpdater(timeUUID);
 		ColumnFamilyUpdater<Long, String> tagsUpdater = PostTemplate.createUpdater(timestamp);
 		tagsUpdater.setString("tags", _tags);
-		tagsUpdater.setLong("time", System.currentTimeMillis());
 		
 		
 		ColumnFamilyUpdater<String, Long> userPostUpdater = UserPostTemplate.createUpdater(_username);
@@ -590,43 +579,32 @@ public class DBConnection {
 	}
 	
 	
+	//Creates an account
 	public boolean createAccount(String _first_name, String _surname, String _username, String _password, String _email, String _avatar)
 	{
-		long timestamp = System.currentTimeMillis();
 		// UPDATE / CREATE CODE
 		// <String, String> correspond to key and Column name.
-		//ColumnFamilyUpdater<UUID, String> nameUpdater = UUIDTemplate.createUpdater(timeUUID);
 		ColumnFamilyUpdater<String, String> first_name = UserTemplate.createUpdater(_username);
 		first_name.setString("first_name", _first_name);
-		first_name.setLong("time", System.currentTimeMillis());
 		
-		//ColumnFamilyUpdater<UUID, String> bodyUpdater = UUIDTemplate.createUpdater(timeUUID);
 		ColumnFamilyUpdater<String, String> surname = UserTemplate.createUpdater(_username);
 		surname.setString("surname", _surname);
-		surname.setLong("time", System.currentTimeMillis());
 		
-		//ColumnFamilyUpdater<UUID, String> tagsUpdater = UUIDTemplate.createUpdater(timeUUID);
 		ColumnFamilyUpdater<String, String> email = UserTemplate.createUpdater(_username);
 		email.setString("email", _email);
-		email.setLong("time", System.currentTimeMillis());
 		
-		//ColumnFamilyUpdater<UUID, String> tagsUpdater = UUIDTemplate.createUpdater(timeUUID);
 		ColumnFamilyUpdater<String, String> avatar = UserTemplate.createUpdater(_username);
 		avatar.setString("avatar", _avatar);
-		avatar.setLong("time", System.currentTimeMillis());
 		
 		
-		
-		//ColumnFamilyUpdater<UUID, String> tagsUpdater = UUIDTemplate.createUpdater(timeUUID);
 		ColumnFamilyUpdater<String, String> password = LoginTemplate.createUpdater(_username);
 		password.setString("password", _password);
-		password.setLong("time", System.currentTimeMillis());
 
 		boolean connected = false;
 		boolean err_found = false;
 		
 		
-		
+		//Error avoidance
 		while (!connected)
 		{
 			err_found = false;
@@ -651,13 +629,11 @@ public class DBConnection {
 				connected = true;
 			}
 		}
-		
-		
 		return true;
-		
 	}
 	
 	
+	//Searches profiles and returns any matches
 	public LinkedList<ProfileStore> searchAll(String srch_first_name, String srch_surname, String srch_email, String srch_city)
 	{
 		LinkedList<ProfileStore> allProfiles = getAllUserProfiles();
@@ -671,7 +647,7 @@ public class DBConnection {
 			
 			if (srch_first_name != "")
 			{
-				if (single_profile.getFirstName().equals(srch_first_name))
+				if (single_profile.getFirstName().toLowerCase().equals(srch_first_name))
 				{
 					matchingProfiles.add(single_profile);
 					continue;
@@ -680,7 +656,7 @@ public class DBConnection {
 			
 			if (srch_surname != "")
 			{
-				if (single_profile.getSurname().equals(srch_surname))
+				if (single_profile.getSurname().toLowerCase().equals(srch_surname))
 				{
 					matchingProfiles.add(single_profile);
 					continue;
@@ -689,7 +665,7 @@ public class DBConnection {
 			
 			if (srch_email != "")
 			{
-				if (single_profile.getEmail().equals(srch_email))
+				if (single_profile.getEmail().toLowerCase().equals(srch_email))
 				{
 					matchingProfiles.add(single_profile);
 					continue;
@@ -698,7 +674,7 @@ public class DBConnection {
 			
 			if (srch_city != "")
 			{
-				if (single_profile.getCity().equals(srch_city))
+				if (single_profile.getCity().toLowerCase().equals(srch_city))
 				{
 					matchingProfiles.add(single_profile);
 					continue;
@@ -711,21 +687,20 @@ public class DBConnection {
 	}
 	
 	
+	//Returns all user profiles
 	public LinkedList<ProfileStore> getAllUserProfiles()
 	{
 		LinkedList<ProfileStore> result_profiles = new LinkedList<ProfileStore>();
-		ColumnFamilyResult<String, String> res = null;
 		boolean connected = false;
 		boolean err_found = false;
 		
+		//Error avoidance
 		while (!connected)
 		{
 			err_found = false;
 			
 			try
-			{
-				LinkedList<Row<String, String, String>> llist = new LinkedList<Row<String, String, String>>();
-				
+			{				
 				int row_count = 100;
 
 		        RangeSlicesQuery<String, String, String> rangeSlicesQuery = HFactory
@@ -767,13 +742,13 @@ public class DBConnection {
 	}
 	
 	
+	//Adds a subscription for <username>
 	public boolean addSubscription(String _username, String _subscription_username)
 	{
 		System.out.println("1: " + _username + "     2: " + _subscription_username);
 		
 		ColumnFamilyUpdater<String, String> new_subscription = SubscribesToTemplate.createUpdater(_username);
 		new_subscription.setString(_subscription_username, "");
-		//new_sub.setLong("time", System.currentTimeMillis());
 		
 		ColumnFamilyUpdater<String, String> new_subscriber = SubscribedToByTemplate.createUpdater(_subscription_username);
 		new_subscriber.setString(_username, "");
@@ -792,6 +767,8 @@ public class DBConnection {
 		return true;
 	}
 	
+	
+	//Removes subscription of <username>
 	public boolean deleteSubscription(String _username, String _subscription_username)
 	{
 		try {
@@ -804,6 +781,7 @@ public class DBConnection {
 	}
 	
 	
+	//Removes subscriber of <username>
 	public boolean deleteSubscriber(String _username, String _subscriber_username)
 	{
 		try {
@@ -814,33 +792,5 @@ public class DBConnection {
 		    return false;
 		}
 	}
-		
-	private UUID generateTimeUUID()
-	{
-		UUID timeUUID = TimeUUIDUtils.getUniqueTimeUUIDinMillis();
-		return timeUUID;
-	}
-		
-	//CONNECTION SETUP
-	
-	
-	/*
-	// READ CODE
-    ColumnFamilyResult<String, String> res = template.queryColumns("shood");
-    String value = res.getString("full_name");
-    //out.println("<p>The full name of user 'shood' is: " + value + "</p>"); //DISPLAY
-	    
-	
-	// UPDATE / CREATE CODE
-	// <String, String> correspond to key and Column name.
-	ColumnFamilyUpdater<String, String> updater = template.createUpdater("jbloggs");
-	updater.setString("full_name", "Joe Bloggs");
-	updater.setLong("time", System.currentTimeMillis());
-
-	try {
-	    template.update(updater);
-	} catch (HectorException e) {
-	    // do something ...
-	}*/
 
 }

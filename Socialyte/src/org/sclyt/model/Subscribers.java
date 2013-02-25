@@ -12,6 +12,7 @@ String username;
 		username = _username;
 	}
 	
+	//Returns a list of subscribers for <username>
 	public LinkedList<ProfileStore> getSubscribers()
 	{
 		DBConnection DBConn = new DBConnection();
@@ -20,6 +21,7 @@ String username;
 		return subscribers_profiles;
 	}
 	
+	//Removes subscriber
 	public boolean deleteSubscriber(String _sub_username)
 	{
 		DBConnection DBConn = new DBConnection();

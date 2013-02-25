@@ -21,6 +21,7 @@ public class ProfileStore {
 		
 	}
 	
+	//Sets any null values to empty strings
 	public void normaliseNulls()
 	{
 		if (first_name == null)

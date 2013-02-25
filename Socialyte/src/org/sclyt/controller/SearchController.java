@@ -48,7 +48,7 @@ public class SearchController extends HttpServlet {
 	
 	
 	private void directToSearch(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-
+		//Directs the browser to the search page
 		HttpSession session = req.getSession();
 		Session thisSession = (Session)session.getAttribute("session");
 		
@@ -79,6 +79,7 @@ public class SearchController extends HttpServlet {
 		}
 		else
 		{
+			//No user logged in - direct to login
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.jsp");
 			rd.forward(req, res);
 		}

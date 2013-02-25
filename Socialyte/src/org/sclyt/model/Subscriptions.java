@@ -13,6 +13,7 @@ public class Subscriptions {
 		username = _username;
 	}
 	
+	//Returns a list of <username>'s subscriptions
 	public LinkedList<ProfileStore> getSubscriptions()
 	{
 		DBConnection DBConn = new DBConnection();
@@ -21,6 +22,8 @@ public class Subscriptions {
 		return subscription_profiles;
 	}
 	
+	
+	//Adds a subscription for <username>
 	public boolean addSubscription(String _subscription_username)
 	{
 		DBConnection DBConn = new DBConnection();
@@ -28,6 +31,8 @@ public class Subscriptions {
 		return DBConn.addSubscription(username, _subscription_username);		
 	}
 	
+	
+	//Removes a subscription for <username>
 	public boolean deleteSubscription(String _subscription_username)
 	{
 		DBConnection DBConn = new DBConnection();

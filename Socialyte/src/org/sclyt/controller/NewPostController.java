@@ -50,6 +50,8 @@ public class NewPostController extends HttpServlet {
 		}
 	}
 
+	
+	//Creates a new post
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
@@ -68,6 +70,7 @@ public class NewPostController extends HttpServlet {
 			PostCreator creator = new PostCreator(username, full_name, body, tags);
 			if (creator.create())
 			{
+				//Post created
 				Date date = new Date();
 				System.out.println("[" + date + "] " + full_name + " created post body {" + body + "}, tags{" + tags + "}" );
 				RequestDispatcher rd = getServletContext().getRequestDispatcher("/feedbackpages/post_success.jsp");
@@ -75,16 +78,16 @@ public class NewPostController extends HttpServlet {
 			}
 			else
 			{
+				//Post failed
 				RequestDispatcher rd = getServletContext().getRequestDispatcher("/feedbackpages/post_fail.jsp");
 				rd.forward(request, response);
 			}
 		}
 		else
 		{
+			//No user logged in - direct to login
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.jsp");
 			rd.forward(request, response);
 		}
-		
 	}
-
 }

@@ -80,7 +80,26 @@
 				</div>
 				
 				<div id="title_pane">
-					<span class="huge_text">Feed</span>
+				<span class="huge_text">Feed</span><br/>
+				<%
+					String feed_type = (String)request.getAttribute("feed");
+				
+					if (feed_type.equals("all_posts"))
+					{
+				%>
+					<span class="small_text">Showing all posts</span><br/><br/>
+					<a href="/Socialyte/Feed"><button class="blue_button">Subscriber Posts</button></a>
+				<%
+					}
+					else
+					{
+				%>
+					<span class="small_text">Showing subscriber posts</span><br/><br/>
+					<a href="/Socialyte/AllPosts"><button class="blue_button">All Posts</button></a>
+				<%
+					}
+				%>
+					
 				</div>
 		
 				<div id="post_pane">

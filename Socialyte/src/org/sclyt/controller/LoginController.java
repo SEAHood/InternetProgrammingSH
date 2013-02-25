@@ -1,7 +1,6 @@
 package org.sclyt.controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -35,7 +34,6 @@ public class LoginController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-
 		attemptLogin(request, response);
 	}
 
@@ -44,19 +42,17 @@ public class LoginController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-
 		attemptLogin(request, response);
-		
 	}
 	
 	
 	private void attemptLogin(HttpServletRequest req, HttpServletResponse response) throws ServletException, IOException 
 	{
 		HttpSession session = req.getSession();
-		PrintWriter out = response.getWriter();
 		
 		if (req.getParameter("logout") != null)
 		{
+			//Log the user out
 			session.removeAttribute("session");
 			req.removeAttribute("session");
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.jsp");
@@ -64,6 +60,7 @@ public class LoginController extends HttpServlet {
 		}
 		else
 		{
+			//Log the user in
 			String username = req.getParameter("username");
 			String password = req.getParameter("password");
 			Login login = null;
@@ -79,22 +76,21 @@ public class LoginController extends HttpServlet {
 			
 			if (success)
 			{
-				//out.println("LOGIN!");
 				Session thisSession = login.createSession();
 				
 				session.setAttribute("session", thisSession);
 				
-				//out.println(session.getAttribute("username"));
+				//Logged in - direct to feed
 				RequestDispatcher rd = getServletContext().getRequestDispatcher("/Feed");
 				rd.forward(req, response);
 			}
 			else
 			{
 				req.setAttribute("invalid_login", true);
+				//Login failed - return to login.jsp
 				RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.jsp");
 				rd.forward(req, response);
 			}
 		}
 	}
-
 }

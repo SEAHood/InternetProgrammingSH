@@ -49,12 +49,10 @@ public class FeedController extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		directToFeed(request, response);
-		//RequestDispatcher rd = getServletContext().getRequestDispatcher("/Login");
-		//rd.forward(request, response);
-		//attemptLogin(request, response);
 	}
 	
 	
+	//Directs to feed
 	private void directToFeed(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
 	{
 		HttpSession session = req.getSession();
@@ -62,9 +60,11 @@ public class FeedController extends HttpServlet {
 				
 		if(thisSession != null)
 		{
+			//User logged in - direct to feed.jsp
 			Posts posts = new Posts();
 			req.setAttribute("posts", posts.getSubscriptionPosts(thisSession.getUsername()));
 			req.setAttribute("session", thisSession);
+			req.setAttribute("feed", "sub_posts");
 			
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/feed.jsp");
 			rd.forward(req, res);
@@ -74,17 +74,16 @@ public class FeedController extends HttpServlet {
 		{
 			if (req.getMethod().equals("POST") && req.getAttribute("validation_error") == null)
 			{
+				//Login attempt - direct to login controller
 				RequestDispatcher rd = getServletContext().getRequestDispatcher("/Login");
 				rd.forward(req, res);
 			}
 			else
 			{
+				//Validaton problem - direct to login.jsp
 				RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.jsp");
 				rd.forward(req, res);
 			}
 		}
-		
 	}
-	
-
 }

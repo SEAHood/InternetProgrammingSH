@@ -8,7 +8,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Socialyte</title>
 <link rel="shortcut icon" href="img/favicon.ico" />
 <link rel="stylesheet" type="text/css" href="/Socialyte/css/main_style.css">
 <link rel="stylesheet" type="text/css" href="/Socialyte/css/subs_style.css">
